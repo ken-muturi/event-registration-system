@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  date        DateTime
+  location    String
+  capacity    Int
+  price       Float    @default(0)
+  category    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  registrations Registration[]
+  
+  @@map("events")
+}
+
+model Registration {
+  id                  String    @id @default(cuid())
+  title               String    // Title/Designation (Mr, Mrs, Dr, etc.)
+  firstName           String
+  lastName            String
+  email               String    @unique
+  affiliation         String    // Affiliation/Organization
+  position            String    // Position in organization
+  country             String
+  phoneNo             String
+  passportNumber      String    @unique
+  passportExpiryDate  DateTime
+  departureCity       String    // Departure city/country
+  passportPhotoUrl    String?   // URL to uploaded passport photo
+  dietaryRequirements String?
+  status              RegistrationStatus @default(PENDING)
+  
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("registrations")
+}
+
+enum RegistrationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
