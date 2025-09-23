@@ -1,0 +1,32 @@
+import React from 'react'
+import { RoleDetail } from '../type'
+import { HStack, IconButton } from '@chakra-ui/react'
+import Modal from '@/components/Generic/Modal'
+import { dictionary } from '../dictionary'
+import { useUX } from '@/context/UXContext'
+import Form from '../Form'
+import { FaEdit } from 'react-icons/fa'
+import DeleteRole from './DeleteRole'
+
+const Actions = ({data}: {data:RoleDetail}) => {
+    const {translate } = useUX();
+  return (
+        <HStack>
+            <Modal
+              size="3xl"
+              vh="40vh"
+              title={`${translate(dictionary.editRole)} ${data.title}`}
+              mainContent={<Form role={data} />}
+            >
+              <IconButton
+                variant="link"
+                icon={<FaEdit color="blue.500"/>}
+                aria-label={translate(dictionary.editRole)}
+              />
+            </Modal>
+            <DeleteRole id={data.id} />
+          </HStack>
+  )
+}
+
+export default Actions

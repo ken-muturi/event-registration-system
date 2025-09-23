@@ -1,81 +1,102 @@
-import { prisma } from '@/db'
-import { Prisma } from '@prisma/client'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use server";
 
-export class EventService {
-  static async getAllEvents() {
-    return prisma.event.findMany({
-      include: {
-        registrations: true,
+import prisma from "@/db";
+
+export const getEvents = async (
+  whereClause?: Record<string, any>,
+  includeRegistrations = false
+) => {
+  const where = whereClause ? whereClause : {};
+  const include = includeRegistrations
+    ? { registrations: true }
+    : {
         _count: {
           select: {
-            registrations: true
-          }
-        }
-      },
+            registrations: true,
+          },
+        },
+      };
+  try {
+    return await prisma.event.findMany({
+      where: { deletedAt: null, ...where },
+      include,
       orderBy: {
-        date: 'asc'
-      }
-    })
+        title: "asc",
+      },
+    });
+  } catch (error) {
+    console.error("Error getting event:", error);
+    throw error;
   }
+};
 
-  static async getEventById(id: string) {
+export const getEventById = async (
+  id: string,
+  includeRegistrations = false
+) => {
+  try {
+    const include = includeRegistrations ? { registrations: true } : {};
     return prisma.event.findUnique({
-      where: { id },
-      include: {
-        registrations: true,
-        _count: {
-          select: {
-            registrations: true
-          }
-        }
-      }
-    })
+      include,
+      where: { id, deletedAt: null },
+    });
+  } catch (error) {
+    console.error("Error creating event:", error);
+    throw error;
   }
+};
 
-  static async createEvent(data: Prisma.EventCreateInput) {
-    return prisma.event.create({
+export const createEvent = async (data: any) => {
+  try {
+    return await prisma.event.create({
       data,
-      include: {
-        registrations: true
-      }
-    })
+    });
+  } catch (error) {
+    console.error("Error creating event:", error);
+    throw error;
   }
+};
 
-  static async updateEvent(id: string, data: Prisma.EventUpdateInput) {
+export const updateEvent = async (id: string, data: any) => {
+  try {
     return prisma.event.update({
       where: { id },
-      data,
-      include: {
-        registrations: true
-      }
-    })
-  }
-
-  static async deleteEvent(id: string) {
-    return prisma.event.delete({
-      where: { id }
-    })
-  }
-
-  static async getAvailableEvents() {
-    const events = await prisma.event.findMany({
-      include: {
-        _count: {
-          select: {
-            registrations: true
-          }
-        }
+      data: {
+        ...data,
+        updatedAt: new Date(),
       },
-      where: {
-        date: {
-          gte: new Date()
-        }
-      },
-      orderBy: {
-        date: 'asc'
-      }
-    })
-
-    return events.filter(event => event._count.registrations < event.capacity)
+    });
+  } catch (error) {
+    console.error("Error creating event:", error);
+    throw error;
   }
-}
+};
+
+export const deleteEvent = async (id: string) => {
+  try {
+    return prisma.event.update({
+      where: { id },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
+  } catch (error) {
+    console.error("Error deleting event:", error);
+    throw error;
+  }
+};
+
+export const restoreEvent = async (id: string) => {
+  try {
+    return prisma.event.update({
+      where: { id },
+      data: {
+        updatedAt: new Date(),
+      },
+    });
+  } catch (error) {
+    console.error("Error deleting event:", error);
+    throw error;
+  }
+};
