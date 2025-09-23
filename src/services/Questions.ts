@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server"
 
-import { QuestionFormSaveFields } from "@/components/Questions/type";
-import prisma from "@/db"
+import { QuestionFormSaveFields } from "@/components/Builder/Questions/type";
+import prisma from "@/db";
 import { handleReturnError } from "@/db/error-handling";
 import { getCurrentUser } from "./UserSessison";
 
@@ -30,7 +30,7 @@ export const getQuestions = async (
 export const getQuestionById = async (id: string) => {
   try {
     return prisma.question.findUnique({
-      include: { unit: true, answers: true },
+      include: { unit: true },
       where: { id, deletedAt: null },
     });
   } catch (error) {

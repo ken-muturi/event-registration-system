@@ -43,20 +43,21 @@ const Details = () => {
 
   return (
     <>
-      {(isLoading) && <FullPageLoader />}
+      {isLoading && <FullPageLoader />}
       {!isLoading && (
         <TableGroupable<TabDetail>
           title={translate(dictionary.tabs)}
           exportCsv={true}
-          headingContent={<>
-            <Modal
-              size="3xl"
-              vh="40vh"
-              mainContent={<Form />}
-            >
-              <Button variant="solid" size="sm" leftIcon={<FaPlus />}>Add</Button>
-            </Modal>
-          </>}
+          headingContent={
+            <>
+              <Modal size="3xl" vh="40vh" mainContent={<Form />}>
+                <Button variant="solid" size="sm">
+                  <FaPlus />
+                  Add
+                </Button>
+              </Modal>
+            </>
+          }
           columnInfo={ColumnDefinition}
           data={tabDetails}
           expandedRows={true}
@@ -64,7 +65,7 @@ const Details = () => {
         />
       )}
     </>
-  )
+  );
 }
 
 export default Details

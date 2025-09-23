@@ -1,5 +1,4 @@
-import ParticleTextSlides from '@/components/WelcomeMessage';
-
+import { Box } from "@chakra-ui/react";
 export default function WelcomePage() {
-  return <ParticleTextSlides />;
+  return <Box>Welcome</Box>;
 }

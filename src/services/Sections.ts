@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server"
 
-import { SectionSaveFields } from "@/components/Sections/type";
+import { SectionSaveFields } from "@/components/Builder/Sections/type";
 import prisma from "@/db";
 import { handleReturnError } from "@/db/error-handling";
 import { omit } from "lodash";

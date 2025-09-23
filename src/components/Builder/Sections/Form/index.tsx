@@ -29,8 +29,6 @@ import * as Yup from "yup";
 import { createSection, updateSection } from "@/services/Sections";
 import { useParams } from "next/navigation";
 import { TranslationText } from "@/types";
-import { FaPlusCircle, FaTimes } from "react-icons/fa";
-import CustomSelect from "@/components/Generic/Formik/CustomSelect";
 import { useMultilingualForm } from '@/hooks/useMultilingualForm';
 import { Check } from "lucide-react";
 

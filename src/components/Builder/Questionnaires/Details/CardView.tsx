@@ -30,72 +30,74 @@ const CardView = ({ forms }: { forms: QuestionnaireWithRelations[] }) => {
                 endDate: d.startDate ? format(new Date(d.endDate), "yyyy-MM-dd") : "",
                 hasSections: d.sections && d.sections.length > 0,
               } as QuestionnaireDetail;
-          return(
-          <VStack
-            alignContent="stretch"
-            spacing={2}
-            alignItems="left"
-            minH="150px"
-            key={questionnaire.id}
-            borderRadius="lg"
-            borderWidth="1px"
-            borderColor="gray.200"
-            p={4}
-          >
-            <Box fontWeight="bold" as="a" href={`/questionnaires/${questionnaire.id}/sections`}>
-              {translate(questionnaire.title as PrismaJson.PartialTranslation[])}
-            </Box>
-            <Text color="gray.400" fontSize="sm">
-              {questionnaire.description.length
-                ? translate(
-                    questionnaire.description as PrismaJson.PartialTranslation[]
-                  )
-                : "No description provided"}
-            </Text>
-              <Box
-                bg="orange.50"
-                h="5px"
-                w="full"
-              />
-            <HStack
-              w="full"
-              fontSize="xs"
-              bg="warchild.black.900"
+          return (
+            <VStack
+              alignContent="stretch"
+              gap={2}
+              alignItems="left"
+              minH="150px"
+              key={questionnaire.id}
+              borderRadius="lg"
+              borderWidth="1px"
+              borderColor="gray.200"
               p={4}
-              borderRadius="md"
             >
-              <IconButton
-                as="a"
-                size="xs"
-                icon={<TbListDetails  />}
-                variant="file"
-                color="warchild.sand.default"
-                _hover={{ bg: "gray.600" }}
-                href={`/assessments/${questionnaire.id}/sections`}
-                aria-label={translate(dictionary.viewQuestionnaireDetails)}
-              />
-            <Modal
-                size="3xl"
-                vh="80vh"
-                title={`${translate(dictionary.editQuestionnaire)} ${translate(
+              <Box fontWeight="bold">
+                {translate(
                   questionnaire.title as PrismaJson.PartialTranslation[]
-                )}`}
-                mainContent={<Form questionnaire={questionnaire} />}
+                )}
+              </Box>
+              <Text color="gray.400" fontSize="sm">
+                {questionnaire.description.length
+                  ? translate(
+                      questionnaire.description as PrismaJson.PartialTranslation[]
+                    )
+                  : "No description provided"}
+              </Text>
+              <Box bg="orange.50" h="5px" w="full" />
+              <HStack
+                w="full"
+                fontSize="xs"
+                bg="warchild.black.900"
+                p={4}
+                borderRadius="md"
               >
-             <IconButton
-                as="a"
-                size="xs"
-                icon={<FaEdit  />}
-                variant="file"
-                  color="orange.400"
-                _hover={{ bg: "gray.600" }}
-                aria-label={translate(dictionary.editQuestionnaire)}
-              />
-              </Modal>
-              <DeleteQuestionnaire disabled={questionnaire.hasSections} id={questionnaire.id} />
-            </HStack>
-          </VStack>
-        )
+                <IconButton
+                  as="a"
+                  size="xs"
+                  color="warchild.sand.default"
+                  _hover={{ bg: "gray.600" }}
+                  aria-label={translate(dictionary.viewQuestionnaireDetails)}
+                >
+                  <TbListDetails />
+                </IconButton>
+                <Modal
+                  size="3xl"
+                  vh="80vh"
+                  title={`${translate(
+                    dictionary.editQuestionnaire
+                  )} ${translate(
+                    questionnaire.title as PrismaJson.PartialTranslation[]
+                  )}`}
+                  mainContent={<Form questionnaire={questionnaire} />}
+                >
+                  <IconButton
+                    as="a"
+                    size="xs"
+                    color="orange.400"
+                    _hover={{ bg: "gray.600" }}
+                    aria-label={translate(dictionary.editQuestionnaire)}
+                  >
+                    <FaEdit />
+                  </IconButton>
+                </Modal>
+                <DeleteQuestionnaire
+                  disabled={questionnaire.hasSections}
+                  id={questionnaire.id}
+                />
+              </HStack>
+            </VStack>
+          );
         })}
       </SimpleGrid>
     </Box>

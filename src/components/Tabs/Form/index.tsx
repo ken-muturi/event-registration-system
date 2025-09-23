@@ -88,10 +88,7 @@ const Form = ({ tab }: { tab?: TabDetail }) => {
         console.log({ formProps });
         return (
           <FormikForm>
-            <VStack
-              alignItems="left"
-              gap={4}
-            >
+            <VStack alignItems="left" gap={4}>
               <CustomInput
                 name="title"
                 required
@@ -104,7 +101,10 @@ const Form = ({ tab }: { tab?: TabDetail }) => {
                 required
                 type="text"
                 label={translate(dictionary.module)}
-                options={(modules || []).map((module) => ({ value: module.id, label: ucwords(module.title) }))}
+                options={(modules || []).map((module) => ({
+                  value: module.id,
+                  label: ucwords(module.title),
+                }))}
               />
               <CustomInput
                 name="description"
@@ -114,7 +114,7 @@ const Form = ({ tab }: { tab?: TabDetail }) => {
                 variant="filled"
               />
               <HStack>
-                <Button type="submit" colorScheme="orange">
+                <Button type="submit" colorPalette="orange">
                   {translate(dictionary.save)}
                 </Button>
                 <Spacer />

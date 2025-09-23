@@ -28,8 +28,6 @@ import * as Yup from "yup";
 import { createUnit, updateUnit } from "@/services/Units";
 import { useParams } from "next/navigation";
 import { TranslationText } from "@/types";
-import CustomSelect from "@/components/Generic/Formik/CustomSelect";
-import { FaPlusCircle, FaTimes } from "react-icons/fa";
 import { Unit } from "@prisma/client";
 import Link from "next/link";
 import { useMultilingualForm } from '@/hooks/useMultilingualForm';

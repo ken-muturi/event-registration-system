@@ -1,5 +1,5 @@
 import prisma from "@/db";
-import { Prisma, RegistrationStatus } from "@prisma/client";
+import { RegistrationStatus } from "@prisma/client";
 
 export interface CreateRegistrationData {
   title: string;

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server"
 
-import { UnitSaveFields } from "@/components/Units/type";
+import { UnitSaveFields } from "@/components/Builder/Units/type";
 import prisma from "@/db";
 import { handleReturnError } from "@/db/error-handling";
 import { omit } from "lodash";

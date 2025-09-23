@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Text, HStack, Select } from '@chakra-ui/react'
-import React from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { omit } from 'lodash'
-import { getOrganizations } from "@/services/Organizations";
+import { Text, HStack, Select, createListCollection } from "@chakra-ui/react";
+import React, { useMemo } from "react";
+// import { useQuery } from '@tanstack/react-query'
+import { omit } from "lodash";
+// import { getOrganizations } from "@/services/Organizations";
 
 export type FilterProps = {
   organizationId?: string;
@@ -15,37 +14,58 @@ type AFiltersProps = {
 };
 
 const Filters = ({ setFilters, filters }: AFiltersProps) => {
-  const { data } = useQuery({
-    queryKey: ["organizations"],
-    queryFn: async () => {
-      return await getOrganizations();
-    },
-  });
+  // TODO: Restore when Organizations service is available
+  // const { data } = useQuery({
+  //   queryKey: ["organizations"],
+  //   queryFn: async () => {
+  //     return await getOrganizations();
+  //   },
+  // });
+
+  const collection = useMemo(
+    () =>
+      createListCollection({
+        items: [
+          { value: "", label: "All" },
+          // ...(data?.map((org: any) => ({ value: org.id, label: org.title })) || [])
+        ],
+      }),
+    []
+  );
 
   return (
     <HStack>
       <Text fontSize="sm">Organization</Text>
-      <Select
-        borderRadius="md"
+      <Select.Root
+        collection={collection}
         size="xs"
-        value={filters.organizationId || ""}
-        onChange={(e) => {
-          if (e.target.value) {
-            setFilters({ ...filters, organizationId: e.target.value });
+        value={filters.organizationId ? [filters.organizationId] : []}
+        onValueChange={(details) => {
+          const value = details.value[0];
+          if (value && value !== "") {
+            setFilters({ ...filters, organizationId: value });
           } else {
             setFilters(omit(filters, ["organizationId"]));
           }
         }}
       >
-        <option value="">All</option>
-        {data?.map((b: any) => (
-          <option key={b.id} value={b.id}>
-            {b.title}
-          </option>
-        ))}
-      </Select>
+        <Select.Control>
+          <Select.Trigger>
+            <Select.ValueText placeholder="All" />
+          </Select.Trigger>
+        </Select.Control>
+        <Select.Positioner>
+          <Select.Content>
+            {collection.items.map((item) => (
+              <Select.Item key={item.value} item={item}>
+                <Select.ItemText>{item.label}</Select.ItemText>
+              </Select.Item>
+            ))}
+          </Select.Content>
+        </Select.Positioner>
+      </Select.Root>
     </HStack>
   );
 };
 
-export default Filters
+export default Filters;

@@ -15,9 +15,10 @@ const Sidebar = ({
       <IconButton
         aria-label="Menu Colapse"
         borderRadius="full"
-        icon={<MdMenu />}
         onClick={() => handleCollapse(!collapse)}
-      />
+      >
+        <MdMenu />
+      </IconButton>
     </Center>
     <Navigation />
   </Box>

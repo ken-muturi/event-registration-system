@@ -18,8 +18,6 @@ const Actions = ({data}: {data:QuestionnaireDetail}) => {
         colorScheme="purple"
         px={2}
         as="a"
-        target="_blank"
-        href={`/assessments/${data.id}/quiz`}
       >
         {translate(dictionary.view)}
       </Badge>
@@ -29,7 +27,6 @@ const Actions = ({data}: {data:QuestionnaireDetail}) => {
         colorScheme="blue"
         px={2}
         as="a"
-        href={`/questionnaires/${data.id}/sections`}
       >
         {translate(dictionary.edit)}
       </Badge>
@@ -39,8 +36,6 @@ const Actions = ({data}: {data:QuestionnaireDetail}) => {
         colorScheme="red"
         px={2}
         py="2px"
-        as="a"
-        href={`/questionnaires/${data.id}/access`}
       >
         {translate(dictionary.access)}
       </Badge>

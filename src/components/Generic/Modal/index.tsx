@@ -1,12 +1,5 @@
-import {
-  Box,
-  useDisclosure,
-  Button,
-  Dialog,
-  Portal,
-  CloseButton,
-} from "@chakra-ui/react";
-import { ReactNode, useEffect, useState } from "react";
+import { Box, Button, Dialog, Portal, CloseButton } from "@chakra-ui/react";
+import { ReactNode, useState } from "react";
 
 interface IModalProps {
   title?: string;

@@ -3,8 +3,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import FullPageLoader from '../Generic/FullPageLoader';
-import Notification from "../Generic/Notification";
+import FullPageLoader from "../Generic/FullPageLoader";
 import {
   Text,
   Box,

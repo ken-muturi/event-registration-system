@@ -78,10 +78,7 @@ const Form = ({ module }: { module?: ModuleDetail }) => {
         console.log({ formProps });
         return (
           <FormikForm>
-            <VStack
-              alignItems="left"
-              gap={4}
-            >
+            <VStack alignItems="left" gap={4}>
               <CustomInput
                 name="title"
                 required
@@ -97,11 +94,13 @@ const Form = ({ module }: { module?: ModuleDetail }) => {
                 variant="filled"
               />
               <HStack>
-                <Button type="submit" colorScheme="orange">
+                <Button type="submit" colorPalette="orange">
                   {translate(dictionary.save)}
                 </Button>
                 <Spacer />
-                <Button onClick={() => window.location.href = "/modules"}>{translate(dictionary.cancel)}</Button>
+                <Button onClick={() => (window.location.href = "/modules")}>
+                  {translate(dictionary.cancel)}
+                </Button>
               </HStack>
             </VStack>
           </FormikForm>

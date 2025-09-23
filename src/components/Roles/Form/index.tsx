@@ -96,11 +96,11 @@ const Form = ({ role }: { role?: RoleDetail }) => {
                 variant="filled"
               />
               <HStack>
-                <Button type="submit" colorScheme="orange">
+                <Button type="submit" colorPalette="orange">
                   {translate(dictionary.save)}
                 </Button>
                 <Spacer />
-                <Button onClick={() => window.location.href = "/roles"}>
+                <Button onClick={() => (window.location.href = "/roles")}>
                   {translate(dictionary.cancel)}
                 </Button>
               </HStack>

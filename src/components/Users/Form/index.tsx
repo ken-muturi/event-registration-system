@@ -189,7 +189,9 @@ const Form = ({
                 variant="filled"
               />
               <Box>
-                <Text mb={2} fontWeight="medium">Image</Text>
+                <Text mb={2} fontWeight="medium">
+                  Image
+                </Text>
                 {file ? (
                   <FilePreview
                     file={file}
@@ -240,11 +242,11 @@ const Form = ({
                 variant="filled"
               />
               <HStack pt={5}>
-                <Button type="submit" colorScheme="red">
+                <Button type="submit" colorPalette="red">
                   {translate(dictionary.save)}
                 </Button>
                 <Spacer />
-                <Button onClick={() => window.location.href = "/users"}>
+                <Button onClick={() => (window.location.href = "/users")}>
                   {translate(dictionary.cancel)}
                 </Button>
               </HStack>

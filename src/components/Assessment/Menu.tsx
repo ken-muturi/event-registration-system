@@ -22,22 +22,12 @@ const Menu = ({
     `/assessments/${questionnaireId}/report`
   );
   return (
-    <HStack
-      borderBottomWidth="medium"
-      borderColor="orange.50"
-      spacing={4}
-      mb={2}
-    >
+    <HStack borderBottomWidth="medium" borderColor="orange.50" gap={4} mb={2}>
       <Box
         p={2}
         as="a"
         color={isQuizActive ? "warchild.white.default" : "inherit"}
         bg={isQuizActive ? "orange.50" : "transparent"}
-        href={
-          isAudit
-            ? `/assessments/${questionnaireId}/audit/${organizationId}`
-            : `/assessments/${questionnaireId}/quiz`
-        }
       >
         {translate(dictionary.assessment)}
       </Box>
@@ -47,11 +37,6 @@ const Menu = ({
         as="a"
         color={isReportActive ? "warchild.white.default" : "inherit"}
         bg={isReportActive ? "orange.50" : "transparent"}
-        href={
-          isAudit
-            ? `/assessments/${questionnaireId}/report/${organizationId}`
-            : `/assessments/${questionnaireId}/report`
-        }
       >
         {translate(dictionary.assessmentReport)}
       </Box>

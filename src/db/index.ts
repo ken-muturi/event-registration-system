@@ -13,7 +13,7 @@ declare global {
     };
 
     type TranslationText = {
-      language: "en" | "es" | "fr" | "ar";
+      language: "en" | "es" | "fr" | "ar" | "ny";
       text: string;
     };
 

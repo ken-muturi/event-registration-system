@@ -11,22 +11,20 @@ import DeleteRole from './DeleteRole'
 const Actions = ({data}: {data:RoleDetail}) => {
     const {translate } = useUX();
   return (
-        <HStack>
-            <Modal
-              size="3xl"
-              vh="40vh"
-              title={`${translate(dictionary.editRole)} ${data.title}`}
-              mainContent={<Form role={data} />}
-            >
-              <IconButton
-                variant="link"
-                icon={<FaEdit color="blue.500"/>}
-                aria-label={translate(dictionary.editRole)}
-              />
-            </Modal>
-            <DeleteRole id={data.id} />
-          </HStack>
-  )
+    <HStack>
+      <Modal
+        size="3xl"
+        vh="40vh"
+        title={`${translate(dictionary.editRole)} ${data.title}`}
+        mainContent={<Form role={data} />}
+      >
+        <IconButton variant="ghost" aria-label={translate(dictionary.editRole)}>
+          <FaEdit color="blue.500" />
+        </IconButton>
+      </Modal>
+      <DeleteRole id={data.id} />
+    </HStack>
+  );
 }
 
 export default Actions
