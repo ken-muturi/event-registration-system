@@ -36,7 +36,7 @@ const Details = ({
   const queryClient = useQueryClient();
   const units = (initialUnits || []).sort((a, b) => a.sortOrder - b.sortOrder);
   const [sortableUnits, setSortableUnits] = useState(units);
-  const [expanded, setExpanded] = useState<string[]>([]);
+  const [expanded, setExpanded] = useState<string[]>(units.map((u) => u.id));
 
   const handleDeleteUnit = async (unitId: string) => {
     try {
