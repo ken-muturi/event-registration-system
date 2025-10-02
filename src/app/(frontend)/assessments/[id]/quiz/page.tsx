@@ -8,7 +8,7 @@ import GenericPage from "@/components/Generic/Page";
 import { PartialTranslation } from "@/types";
 import { AssementAnswer } from "@/components/Assessment/type";
 import { getAnswers } from "@/services/Answers";
-import getMAC from 'getmac'
+import { getMAC } from "@ctrl/mac-address";
 
 async function getQuestionnaireDetails(
   questionnaireId: string,
