@@ -85,18 +85,11 @@ const Details = ({ users: initalUsers, roles }: DetailProps) => {
               <Filters filters={filters} setFilters={setFilters} />
               <Modal
                 title="Add User"
-                size="4xl"
+                size="lg"
                 vh="90vh"
-                mainContent={
-                  <Form roles={roles} />
-                }
+                mainContent={<Form roles={roles} />}
               >
-                <Button
-                  variant="solid"
-                  colorScheme="green"
-                  as="a"
-                  size="xs"
-                >
+                <Button variant="solid" colorScheme="green" as="a" size="xs">
                   <FaPlus />
                   Add
                 </Button>
