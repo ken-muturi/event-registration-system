@@ -22,11 +22,7 @@ type AssessmentProps = {
   selfAssessmentStatus?: QuestionAssessed[];
   auditorAssessmentStatus?: QuestionAssessed[];
 };
-const Assessments = ({
-  assessments,
-  selfAssessmentStatus = [],
-  auditorAssessmentStatus = [],
-}: AssessmentProps) => {
+const Assessments = ({ assessments }: AssessmentProps) => {
   const { translate } = useUX();
   const { data: session } = useSession();
   const user = session ? session?.user : undefined;
@@ -34,14 +30,6 @@ const Assessments = ({
     <VStack gap={4} p={4} alignItems="left" w="full">
       <SimpleGrid gap={4} columns={{ base: 1, md: 2, lg: 3 }}>
         {assessments.map((questionnaire) => {
-          const isSelfAssessed = selfAssessmentStatus.find(
-            (q) => q.id === questionnaire.id
-          )?.isAssessed;
-
-          const isAudited = auditorAssessmentStatus.find(
-            (q) => q.id === questionnaire.id
-          )?.isAssessed;
-
           return (
             <VStack
               alignContent="stretch"
@@ -85,70 +73,16 @@ const Assessments = ({
                 p={4}
                 borderRadius="md"
               >
-                {user && ["admin"].includes(user.role) && (
-                  <>
-                    <Button
-                      size="xs"
-                      bg="gray.700"
-                      color="warchild.sand.default"
-                      _hover={{ bg: "gray.600" }}
-                      as="a"
-                      // href={`/assessments/${questionnaire.id}/quiz`}
-                    >
-                      {translate(dictionary.preview)}
-                    </Button>
-                    <Button
-                      size="xs"
-                      bg="gray.700"
-                      color="warchild.sand.default"
-                      _hover={{ bg: "gray.600" }}
-                      as="a"
-                      // href={`/assessment-ratings/${questionnaire.id}`}
-                    >
-                      {translate(dictionary.reports)}
-                    </Button>
-                  </>
-                )}
-
-                {user && ["auditor"].includes(user.role) && !isAudited && (
-                  <Button
-                    size="xs"
-                    bg="gray.700"
-                    color="warchild.sand.default"
-                    _hover={{ bg: "gray.600" }}
-                    as="a"
-                    // href={`/assessments/${questionnaire.id}/audit`}
-                  >
-                    Audit
-                  </Button>
-                )}
-
-                {user && ["user", "ngo"].includes(user.role) && (
-                  <>
-                    {!isSelfAssessed && (
-                      <Button
-                        size="xs"
-                        bg="gray.700"
-                        color="warchild.sand.default"
-                        _hover={{ bg: "gray.600" }}
-                        as="a"
-                        // href={`/assessments/${questionnaire.id}/quiz`}
-                      >
-                        {translate(dictionary.assessment)}
-                      </Button>
-                    )}
-                    <Button
-                      size="xs"
-                      bg="gray.700"
-                      color="warchild.sand.default"
-                      _hover={{ bg: "gray.600" }}
-                      as="a"
-                      // href={`/assessments/${questionnaire.id}/report`}
-                    >
-                      Report
-                    </Button>
-                  </>
-                )}
+                <Button
+                  size="xs"
+                  bg="gray.700"
+                  color="warchild.sand.default"
+                  _hover={{ bg: "gray.600" }}
+                  as="a"
+                  // href={`/assessments/${questionnaire.id}/quiz`}
+                >
+                  {translate(dictionary.assessment)}
+                </Button>
               </HStack>
             </VStack>
           );
