@@ -72,7 +72,7 @@ const CardView = ({ forms }: { forms: QuestionnaireWithRelations[] }) => {
                   <TbListDetails />
                 </IconButton>
                 <Modal
-                  size="3xl"
+                  size="lg"
                   vh="80vh"
                   title={`${translate(
                     dictionary.editQuestionnaire

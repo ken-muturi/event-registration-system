@@ -1,17 +1,14 @@
-import { Box, Button, Dialog, Portal, CloseButton } from "@chakra-ui/react";
-import { ReactNode, useState } from "react";
+import { CloseButton, Dialog, Portal } from "@chakra-ui/react";
+import { ReactNode, cloneElement, isValidElement } from "react";
 
 interface IModalProps {
   title?: string;
   children: ReactNode;
   mainContent: ReactNode;
-  size?: string;
-  isModalOpen?: boolean;
+  size?: "xs" | "sm" | "md" | "lg" | "xl" | "cover" | "full";
   vh?: string;
-  onModalClose?: () => void;
-  footer?: ReactNode;
-  closeOnOverlayClick?: boolean;
-  onClose?: () => void; // this is to trigger  close upon form submit. can be refactored
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 const CustomModal = (props: IModalProps) => {
@@ -19,47 +16,34 @@ const CustomModal = (props: IModalProps) => {
     children,
     title,
     mainContent,
-    size,
-    vh = "50vh",
-    footer,
-    isModalOpen = false,
+    open,
+    onOpenChange,
+    size = "lg",
+    vh,
   } = props;
-  const [open, setOpen] = useState(isModalOpen);
   return (
     <Dialog.Root
-      // placement="top"
-      open={open} onOpenChange={(e) => setOpen(e.open)}
-      size={size === "8xl" ? "full" : (size as "sm" | "md" | "lg" | "xl" | "xs" | "cover" | "full") || "lg"}
-      scrollBehavior="inside" 
+      open={open}
+      onOpenChange={(details) => onOpenChange?.(details.open)}
+      size={size}
+      scrollBehavior="inside"
+      placement="top"
+      motionPreset="slide-in-bottom"
     >
-      <Dialog.Trigger asChild>
-        {children}
-      </Dialog.Trigger>
+      <Dialog.Trigger asChild>{children}</Dialog.Trigger>
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content
-            borderRadius="none"
-            overflow="auto"
-            p={4}
-            h={vh}
-          >
-            {title ? <Dialog.Header><Box fontWeight="bold" fontSize="lg">{title}</Box></Dialog.Header> : ""}
-            <Dialog.CloseTrigger />
-            <Dialog.Body>
-              <Box>{mainContent}</Box>
-            </Dialog.Body>
-            {footer && (
-              <Dialog.Footer>
-                {footer}
-              <Dialog.ActionTrigger asChild>
-                <Button variant="outline">Cancel</Button>
-              </Dialog.ActionTrigger>              
-              </Dialog.Footer>
-            )}
+          <Dialog.Content {...(vh ? { h: vh } : {})} p={4}>
             <Dialog.CloseTrigger asChild>
               <CloseButton size="sm" />
             </Dialog.CloseTrigger>
+            {title && (
+              <Dialog.Header>
+                <Dialog.Title>{title}</Dialog.Title>
+              </Dialog.Header>
+            )}
+            <Dialog.Body>{mainContent}</Dialog.Body>
           </Dialog.Content>
         </Dialog.Positioner>
       </Portal>

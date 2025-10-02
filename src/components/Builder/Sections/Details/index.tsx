@@ -7,17 +7,13 @@ import {
   Text,
   Accordion,
   Box,
-  Button,
   VStack,
   IconButton,
   HStack,
   createToaster,
-  Toaster,
 } from "@chakra-ui/react";
-import { FaEdit, FaPlus, FaTimes, FaChevronDown } from "react-icons/fa";
+import { FaTimes, FaChevronDown } from "react-icons/fa";
 import { SectionWithRelations } from "../type";
-import Modal from "@/components/Generic/Modal";
-import Form from "../Form";
 import { useUX } from "@/context/UXContext";
 import { dictionary } from "../dictionary";
 import { deleteSection, getSections } from "@/services/Sections";
@@ -26,6 +22,7 @@ import { Questionnaire } from "@prisma/client";
 import { range } from "lodash";
 import { ucwords } from "@/utils/util";
 import { handleReturnError } from "@/db/error-handling";
+import AddEditSectionModal from "./AddEditSectionModal";
 
 const toaster = createToaster({
   placement: "top",
@@ -40,8 +37,6 @@ const Details = ({
 }) => {
   const queryClient = useQueryClient();
   const { translate } = useUX();
-  // Note: useToast is not available in Chakra UI v3 - consider using alternative notification system
-
   const { data, isLoading } = useQuery({
     queryKey: ["sections"],
     queryFn: async () => {
@@ -67,7 +62,7 @@ const Details = ({
       toaster.create({
         title: translate(dictionary.error),
         description: message,
-        type: "error", 
+        type: "error",
         duration: 5000,
       });
     }
@@ -78,7 +73,7 @@ const Details = ({
       {isLoading && <FullPageLoader />}
       {!isLoading && (
         <VStack gap={2} alignItems="left">
-          <Text fontSize="3xl" fontWeight="bold" color="orange.50">
+          <Text fontSize="3xl" fontWeight="bold" color="green.700">
             {ucwords(
               translate(questionnaire.title as PrismaJson.PartialTranslation[])
             )}
@@ -90,8 +85,9 @@ const Details = ({
           </Text>
 
           <Accordion.Root
+            collapsible
             multiple
-            defaultValue={range(0, sections.length + 1).map(i => i.toString())}
+            value={(sections || []).map((s) => s.id)}
           >
             {(data || []).map((section, index) => (
               <Accordion.Item key={section.id} value={section.id} mb={2}>
@@ -111,20 +107,7 @@ const Details = ({
                       )}
                     </Box>
                   </Accordion.ItemTrigger>
-                  <Modal
-                    title={translate(dictionary.editSection)}
-                    size="lg"
-                    vh="60vh"
-                    mainContent={<Form section={section} />}
-                  >
-                    <IconButton
-                      variant="ghost"
-                      size="xs"
-                      aria-label={translate(dictionary.editSection)}
-                    >
-                      <FaEdit />
-                    </IconButton>
-                  </Modal>
+                  <AddEditSectionModal data={section} />
                   <IconButton
                     variant="ghost"
                     disabled={section.units && section.units.length > 0}
@@ -140,51 +123,21 @@ const Details = ({
                     <FaChevronDown />
                   </Accordion.ItemIndicator>
                 </HStack>
-                <Accordion.ItemContent pb={4}>
-                  <Box fontStyle="italic" fontWeight="300" mb={2} fontSize="xs">
+                <Accordion.ItemContent p={2}>
+                  <Box fontStyle="italic" fontWeight="300" mb={2} fontSize="md">
                     {translate(
                       section.description as PrismaJson.PartialTranslation[]
                     )}
                   </Box>
                   <Units units={section.units || []} sectionId={section.id} />
-                  <Text fontSize="sm" color="gray.500">Units component not available</Text>
                 </Accordion.ItemContent>
               </Accordion.Item>
             ))}
           </Accordion.Root>
 
-          <Modal
-            title={translate(dictionary.addSection)}
-            size="lg"
-            vh="60vh"
-            mainContent={<Form />}
-          >
-            <Button
-              variant="outline"
-              size="xs"
-              color="orange.50"
-            >
-              <FaPlus />
-              {translate(dictionary.addSection)}
-            </Button>
-          </Modal>
+          <AddEditSectionModal />
         </VStack>
       )}
-      <Toaster toaster={toaster}>
-        {(toast) => (
-          <Box
-            key={toast.id}
-            p={4}
-            bg={toast.type === "success" ? "green.500" : "red.500"}
-            color="white"
-            borderRadius="md"
-            boxShadow="lg"
-          >
-            <Text fontWeight="bold">{toast.title}</Text>
-            {toast.description && <Text>{toast.description}</Text>}
-          </Box>
-        )}
-      </Toaster>
     </>
   );
 };

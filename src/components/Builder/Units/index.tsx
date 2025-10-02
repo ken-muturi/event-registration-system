@@ -5,14 +5,11 @@ import {
   HStack,
   Accordion,
   Box,
-  Button,
   IconButton,
   Icon,
   createToaster,
 } from "@chakra-ui/react";
-import { FaEdit, FaPlus, FaTimes } from "react-icons/fa";
-import Modal from "@/components/Generic/Modal";
-import Form from "./Form";
+import { FaTimes } from "react-icons/fa";
 import { useUX } from "@/context/UXContext";
 import { dictionary } from "./dictionary";
 import { UnitWithRelation } from "./type";
@@ -22,6 +19,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { deleteUnit, updatUnitOrder } from "@/services/Units";
 import { handleReturnError } from "@/db/error-handling";
 import { Reorder } from "framer-motion";
+import AddEditUnitModal from "./AddEditUnitModal";
+import { values } from "lodash";
 
 const Details = ({
   units: initialUnits,
@@ -37,6 +36,7 @@ const Details = ({
   const queryClient = useQueryClient();
   const units = (initialUnits || []).sort((a, b) => a.sortOrder - b.sortOrder);
   const [sortableUnits, setSortableUnits] = useState(units);
+  const [expanded, setExpanded] = useState<string[]>([]);
 
   const handleDeleteUnit = async (unitId: string) => {
     try {
@@ -82,8 +82,8 @@ const Details = ({
     >
       <Accordion.Root
         multiple
-        // defaultIndex={range(0, units.length + 1)}
-        // bg="warchild.sand.default"
+        value={expanded}
+        onValueChange={(details) => setExpanded(details.value)}
       >
         {(sortableUnits || []).map((unit) => (
           <Reorder.Item
@@ -98,18 +98,33 @@ const Details = ({
             whileTap={{ scale: 0.98 }}
             transition={{ duration: 0.2 }}
           >
-            <Accordion.Item key={unit.id} value={unit.id} borderWidth="0px">
-              <HStack pr={2}>
+            <Accordion.Item
+              key={unit.id}
+              value={unit.id}
+              borderWidth="0px"
+              borderBottomWidth="thin"
+            >
+              <HStack
+                pr={2}
+                w="full"
+                {...(expanded.includes(unit.id)
+                  ? {
+                      bg: "green.600",
+                      borderRadius: "none",
+                    }
+                  : {})}
+              >
                 <Accordion.ItemTrigger p={1}>
                   <HStack textAlign="left">
                     <Icon
-                      boxSize={5}
+                      size="lg"
                       fontWeight="bold"
                       verticalAlign="middle"
-                      as={TbSection}
                       fontSize="md"
-                      color="orange.50"
-                    />
+                      color={expanded.includes(unit.id) ? "black" : "green.600"}
+                    >
+                      <TbSection />
+                    </Icon>
                     <Box fontSize="sm">
                       <>
                         {translate(dictionary.unit)}:{" "}
@@ -121,20 +136,7 @@ const Details = ({
                   </HStack>
                   <Accordion.ItemIndicator />
                 </Accordion.ItemTrigger>
-                <Modal
-                  title={translate(dictionary.editUnit)}
-                  size="lg"
-                  vh="60vh"
-                  mainContent={<Form sectionId={sectionId} unit={unit} />}
-                >
-                  <IconButton
-                    variant="ghost"
-                    size="xs"
-                    aria-label={translate(dictionary.editUnit)}
-                  >
-                    <FaEdit />
-                  </IconButton>
-                </Modal>
+                <AddEditUnitModal sectionId={sectionId} data={unit} />
                 <IconButton
                   variant="ghost"
                   disabled={unit.questions && unit.questions.length > 0}
@@ -148,44 +150,27 @@ const Details = ({
                 </IconButton>
               </HStack>
               <Accordion.ItemContent
-                pb={4}
-                borderWidth="thin"
-                borderColor="orange.50"
+                p={4}
+                {...(expanded.includes(unit.id)
+                  ? {
+                      borderWidth: "thin",
+                      borderColor: "green.600",
+                      borderRadius: "none",
+                    }
+                  : {})}
               >
-                <Box
-                  fontStyle="italic"
-                  fontWeight="300"
-                  mb={2}
-                  fontSize="xs"
-                >
+                <Box fontStyle="italic" fontWeight="300" mb={2} fontSize="sm">
                   {translate(
                     unit.description as PrismaJson.PartialTranslation[]
                   )}
                 </Box>
-                <Questions
-                  questions={unit.questions || []}
-                  unitId={unit.id}
-                />
+                <Questions questions={unit.questions || []} unitId={unit.id} />
               </Accordion.ItemContent>
             </Accordion.Item>
           </Reorder.Item>
         ))}
       </Accordion.Root>
-      <Modal
-        title={translate(dictionary.addUnit)}
-        size="lg"
-        vh="60vh"
-        mainContent={<Form sectionId={sectionId} />}
-      >
-        <Button
-          variant="ghost"
-          size="xs"
-          color="orange.50"
-        >
-          <FaPlus />
-          {translate(dictionary.addUnit)}
-        </Button>
-      </Modal>
+      <AddEditUnitModal sectionId={sectionId} />
     </Reorder.Group>
   );
 };

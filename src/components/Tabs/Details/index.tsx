@@ -50,7 +50,7 @@ const Details = () => {
           exportCsv={true}
           headingContent={
             <>
-              <Modal size="3xl" vh="40vh" mainContent={<Form />}>
+              <Modal size="lg" vh="40vh" mainContent={<Form />}>
                 <Button variant="solid" size="sm">
                   <FaPlus />
                   Add

@@ -16,15 +16,6 @@ export interface User {
   roleId: string;
   organizationId: string;
   role: string;
-  organization: {
-    id: string;
-    title: string;
-    abbreviation: string;
-    type: {
-      id: string;
-      title: string;
-    };
-  };
 }
 
 declare module "next-auth" {
@@ -114,8 +105,6 @@ export const AuthOptions: NextAuthOptions = {
             "role",
             "email",
             "roleId",
-            "organizationId",
-            "organization",
           ]),
         },
       };

@@ -9,7 +9,9 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
-
+.github
+.github/*
+/.github/*
 # testing
 /coverage
 
@@ -51,3 +53,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+#Ignore vscode AI rules
+.github\instructions\codacy.instructions.md

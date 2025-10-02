@@ -17,57 +17,53 @@ const Columns = ({ translate }: {
     ) => string
 }): ColumnDef<TabDetail, any>[] => {
     return [
-        columnHelper.accessor('id', {
-            header: '#',
-            enableColumnFilter: false,
-            enableHiding: false,
-            enableGrouping: false,
-            size: 30,
-            cell: (cell) => cell.row.index + 1
-        }),
-        columnHelper.accessor('title', {
-            header: translate(dictionary.tab),
-            enableColumnFilter: false,
-            enableHiding: false,
-            enableGrouping: false,
-            cell: (cell) => {
-                const c = cell.row.original;
-                return <Modal
-                    size="4xl"
-                    vh="70vh"
-                    title={`${translate(dictionary.editTab)} ${c.title}`}
-                    mainContent={<Form tab={c} />}
-                >
-                    <Text>{c.title}</Text>
-                </Modal>
-            }
-        }),
-        columnHelper.accessor('module', {
-            header: translate(dictionary.module),
-        }),
-        columnHelper.accessor('description', {
-            header: translate(dictionary.description),
-        }),
-        columnHelper.accessor('id', {
-            header: translate(dictionary.actions),
-            enableColumnFilter: false,
-            enableHiding: false,
-            enableGrouping: false,
-            cell: (cell) => {
-                const c = cell.row.original;
-                return <HStack>
-                    <Modal
-                        size="3xl"
-                        vh="40vh"
-                        title={`${translate(dictionary.editTab)} ${c.title}`}
-                        mainContent={<Form tab={c} />}
-                    >
-                        <Icon cursor="pointer" color="orange.400" as={FaEdit} aria-label="Edit" />
-                    </Modal>
-                    <DeleteTab id={c.id} />
-                </HStack>
-            }
-        }),
+      columnHelper.accessor("id", {
+        header: "#",
+        enableColumnFilter: false,
+        enableHiding: false,
+        enableGrouping: false,
+        size: 30,
+        cell: (cell) => cell.row.index + 1,
+      }),
+      columnHelper.accessor("title", {
+        header: translate(dictionary.tab),
+        enableColumnFilter: false,
+        enableHiding: false,
+        enableGrouping: false,
+      }),
+      columnHelper.accessor("module", {
+        header: translate(dictionary.module),
+      }),
+      columnHelper.accessor("description", {
+        header: translate(dictionary.description),
+      }),
+      columnHelper.accessor("id", {
+        header: translate(dictionary.actions),
+        enableColumnFilter: false,
+        enableHiding: false,
+        enableGrouping: false,
+        cell: (cell) => {
+          const c = cell.row.original;
+          return (
+            <HStack>
+              <Modal
+                size="lg"
+                vh="40vh"
+                title={`${translate(dictionary.editTab)} ${c.title}`}
+                mainContent={<Form tab={c} />}
+              >
+                <Icon
+                  cursor="pointer"
+                  color="orange.400"
+                  as={FaEdit}
+                  aria-label="Edit"
+                />
+              </Modal>
+              <DeleteTab id={c.id} />
+            </HStack>
+          );
+        },
+      }),
     ];
 }
 export default Columns;

@@ -1,44 +1,57 @@
 import { useUX } from '@/context/UXContext'
-import { Badge, HStack, IconButton } from '@chakra-ui/react'
-import React from 'react'
-import { dictionary } from '../dictionary'
-import Modal from '@/components/Generic/Modal'
-import Form from '../Form'
-import { MdModeEdit } from 'react-icons/md'
-import DeleteQuestionnaire from './DeleteQuestionnaire'
-import { QuestionnaireDetail } from '../type'
+import { Badge, Box, HStack, IconButton } from "@chakra-ui/react";
+import React from "react";
+import Link from "next/link";
+import { dictionary } from "../dictionary";
+import Modal from "@/components/Generic/Modal";
+import Form from "../Form";
+import { MdModeEdit } from "react-icons/md";
+import DeleteQuestionnaire from "./DeleteQuestionnaire";
+import { QuestionnaireDetail } from "../type";
 
-const Actions = ({data}: {data:QuestionnaireDetail}) => {
-    const { translate, } = useUX()
+const Actions = ({ data }: { data: QuestionnaireDetail }) => {
+  const { translate } = useUX();
   return (
     <HStack>
-      <Badge
-        size="xs"
-        _hover={{ colorScheme: "black" }}
-        colorScheme="purple"
+      <Box
+        colorPalette="purple"
+        _hover={{ colorPalette: "gray" }}
         px={2}
-        as="a"
+        py={1}
+        borderRadius="md"
+        cursor="pointer"
+        asChild
       >
-        {translate(dictionary.view)}
-      </Badge>
-      <Badge
-        size="xs"
-        _hover={{ colorScheme: "black" }}
-        colorScheme="blue"
+        <Link href={`/assessments/${data.id}/quiz`}>
+          {translate(dictionary.view)}
+        </Link>
+      </Box>
+      <Box
+        bg="gray.50"
+        _hover={{ bg: "blue.50", color: "blue.600" }}
         px={2}
-        as="a"
+        py={1}
+        borderRadius="md"
+        cursor="pointer"
+        asChild
       >
-        {translate(dictionary.edit)}
-      </Badge>
-      <Badge
-        size="xs"
-        _hover={{ colorScheme: "black" }}
-        colorScheme="red"
+        <Link href={`/questionnaires/${data.id}/sections`}>
+          {translate(dictionary.edit)}
+        </Link>
+      </Box>
+      <Box
+        bg="gray.50"
+        _hover={{ bg: "blue.50", color: "blue.600" }}
         px={2}
-        py="2px"
+        py={1}
+        borderRadius="md"
+        cursor="pointer"
+        asChild
       >
-        {translate(dictionary.access)}
-      </Badge>
+        <Link href={`/questionnaires/${data.id}/answers`}>
+          {translate(dictionary.answers)}
+        </Link>
+      </Box>
       <Modal
         size="lg"
         vh="75vh"
@@ -49,20 +62,21 @@ const Actions = ({data}: {data:QuestionnaireDetail}) => {
       >
         <IconButton
           cursor="pointer"
-          size="xs"
+          size="sm"
           borderRadius="full"
           color="gray.600"
           _hover={{
-            bg: "warchild.blue.default",
-            color: "warchild.white.default",
+            bg: "blue.500",
+            color: "white",
           }}
-          as={MdModeEdit}
           aria-label={translate(dictionary.editQuestionnaire)}
-        />
+        >
+          <MdModeEdit />
+        </IconButton>
       </Modal>
       <DeleteQuestionnaire disabled={data.hasSections} id={data.id} />
     </HStack>
   );
-}
+};
 
 export default Actions

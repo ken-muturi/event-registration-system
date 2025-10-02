@@ -350,10 +350,10 @@ export const DynamicForm = ({
 
               <Button
                 type="submit"
-                bg="orange.50"
-                color="warchild.white.default"
+                bg="green.600"
+                color="white"
                 _hover={{
-                  bg: "warchild.blue.default",
+                  bg: "green.700",
                 }}
               >
                 {buttonText}

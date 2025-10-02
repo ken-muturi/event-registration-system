@@ -1,30 +1,28 @@
 import React from 'react';
 import { Box } from "@chakra-ui/react";
-// import Navigation from "@/components/Menus/Navigation/Horizontal";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import Navigation from "@/components/Menus/Navigation";
 import { AuthProvider } from "@/context/AuthContext";
 import ContentWrapper from "@/components/Generic/ContentWrapper";
-import { AuthOptions } from '@/app/auth';
+import { AuthOptions } from "@/app/auth";
 
 const ProtectedLayout = async ({
   children,
 }: Readonly<{ children: React.ReactNode }>) => {
   const session = await getServerSession(AuthOptions);
-  console.log("session", session);
   if (
     !session ||
     !["admin", "super admin"].includes(
       session.user?.role?.toLowerCase() || "ngo"
     )
   ) {
-    // redirect("/");
+    redirect("/");
   }
 
   return (
     <AuthProvider session={session}>
-      <Box minH="100vh" bg="green.contrast">
+      <Box minH="100vh" bg="gray.200">
         <Navigation />
         <Box
           p={3}

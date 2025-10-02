@@ -1,5 +1,14 @@
-import { Box, HStack, Icon, IconButton, Tooltip, Select, createListCollection } from '@chakra-ui/react';
-import React, { useEffect, useState, useMemo } from 'react';
+import {
+  Box,
+  HStack,
+  Icon,
+  IconButton,
+  Tooltip,
+  Select,
+  createListCollection,
+  Portal,
+} from "@chakra-ui/react";
+import React, { useEffect, useState, useMemo } from "react";
 import { GrSearch } from "react-icons/gr";
 import { HiXCircle } from "react-icons/hi2";
 
@@ -27,19 +36,21 @@ const DebouncedSelect = ({
   ...props
 }: DebouncedInputProps) => {
   const [values, setValues] = useState<string[]>(
-    initialValues ? initialValues.map(v => v.value) : []
+    initialValues ? initialValues.map((v) => v.value) : []
   );
 
-  const collection = useMemo(() => 
-    createListCollection({
-      items: options,
-      itemToString: (item) => item.label,
-      itemToValue: (item) => item.value,
-    }), [options]
+  const collection = useMemo(
+    () =>
+      createListCollection({
+        items: options,
+        itemToString: (item) => item.label,
+        itemToValue: (item) => item.value,
+      }),
+    [options]
   );
 
   useEffect(() => {
-    setValues(initialValues ? initialValues.map(v => v.value) : []);
+    setValues(initialValues ? initialValues.map((v) => v.value) : []);
   }, [initialValues]);
 
   return (
@@ -61,10 +72,9 @@ const DebouncedSelect = ({
       <Box>{title}:</Box>
       <Box flex={1}>
         <Select.Root
-          size="lg"
-                  fontSize="sm"
-        borderRadius="xl"
-        borderWidth="2px"
+          size="xs"
+          fontSize="sm"
+          variant="subtle"
           multiple={isMulti}
           value={values}
           collection={collection}
@@ -73,18 +83,29 @@ const DebouncedSelect = ({
             onChange(details.value);
           }}
         >
-          <Select.Trigger>
-            <Select.ValueText placeholder={props.placeholder || "Select options"} />
-            <Select.Indicator />
-          </Select.Trigger>
-          <Select.Content>
-            {collection.items.map((option) => (
-              <Select.Item key={option.value} item={option}>
-                <Select.ItemText>{option.label}</Select.ItemText>
-                <Select.ItemIndicator />
-              </Select.Item>
-            ))}
-          </Select.Content>
+          <Select.HiddenSelect />
+          <Select.Control>
+            <Select.Trigger>
+              <Select.ValueText
+                placeholder={props.placeholder || "Select options"}
+              />
+            </Select.Trigger>
+            <Select.IndicatorGroup>
+              <Select.Indicator />
+            </Select.IndicatorGroup>
+          </Select.Control>
+          <Portal>
+            <Select.Positioner>
+              <Select.Content>
+                {collection.items.map((option) => (
+                  <Select.Item key={option.value} item={option}>
+                    {option.label}
+                    <Select.ItemIndicator />
+                  </Select.Item>
+                ))}
+              </Select.Content>
+            </Select.Positioner>
+          </Portal>
         </Select.Root>
       </Box>
       <Box>
@@ -93,7 +114,7 @@ const DebouncedSelect = ({
             <IconButton
               variant="ghost"
               aria-label="clear"
-              size="md"
+              size="xs"
               color="gray.500"
               onClick={() => {
                 setValues([]);
@@ -105,9 +126,7 @@ const DebouncedSelect = ({
             </IconButton>
           </Tooltip.Trigger>
           <Tooltip.Positioner>
-            <Tooltip.Content>
-              Click to clear
-            </Tooltip.Content>
+            <Tooltip.Content>Click to clear</Tooltip.Content>
           </Tooltip.Positioner>
         </Tooltip.Root>
       </Box>

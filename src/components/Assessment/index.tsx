@@ -1,16 +1,11 @@
- 
-'use client';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import React, { useEffect, useState } from 'react'
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+"use client";
+
+import React, { useEffect, useMemo, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import FullPageLoader from "../Generic/FullPageLoader";
-import {
-  Text,
-  Box,
-  VStack,
-  Stack,
-  createToaster,
-} from "@chakra-ui/react";
+import { Text, Box, VStack, Stack, createToaster } from "@chakra-ui/react";
 import { AssementAnswer, SectionWithRelations } from "./type";
 import {
   type ActionMeta,
@@ -20,16 +15,15 @@ import {
 
 // import { useUX } from '@/context/UXContext';
 import { getSections } from "@/services/Sections";
-import {  Questionnaire } from "@prisma/client";
+import { Questionnaire } from "@prisma/client";
 import { DynamicForm, FieldConfig } from "@/utils/form-builder";
 import { last } from "lodash";
 import { handleReturnError } from "@/db/error-handling";
 import { dictionary } from "./dictionary";
 import { useUX } from "@/context/UXContext";
 import { indexBy } from "@/utils/util";
-import { useSession } from "next-auth/react";
-import Menu from "./Menu";
-import { UnitWithRelation } from '../Builder/Units/type';
+import { UnitWithRelation } from "../Builder/Units/type";
+import { getAnswers, saveAnswers } from "@/services/Answers";
 
 export type Option = {
   label: string;
@@ -43,24 +37,23 @@ const activeStyle = {
   // fontWeight: "bold",
 };
 
+const toaster = createToaster({ placement: "top-end" });
 const Assessment = ({
   questionnaire,
   sections,
-  answers,
+  answers: initialAnswers,
   readOnly = false,
+  dataEntryNumber,
 }: {
   questionnaire: Questionnaire;
   sections: SectionWithRelations[];
   answers: AssementAnswer[];
   readOnly?: boolean;
+  dataEntryNumber: string;
 }) => {
   const { translate } = useUX();
   const queryClient = useQueryClient();
-  const toaster = createToaster({placement: "top-end"});
-  const { data: session } = useSession();
-  const userId = session?.user?.id || "1"; // Default to "1" if session is not available
 
-  const [startTime, setStartTime] = useState<Date>(new Date());
   const [isSaving, setIsSaving] = useState(false);
   const [currentSection, setCurrentSection] = useState<
     SectionWithRelations | undefined
@@ -80,21 +73,44 @@ const Assessment = ({
     initialData: sections,
   });
 
-  useEffect(() => {
-    if (data && data.length > 0 && !currentSection) {
-      setCurrentSection(data[0]);
-      setCurrentUnit(data[0].units?.[0]);
-    }
-  }, [data, currentSection]);
+  const { data: answers, isLoading: isAnswersLoading } = useQuery({
+    queryKey: [
+      "answers",
+      { questionnaireId: questionnaire.id, dataEntryNumber },
+    ],
+    queryFn: async () => {
+      return (await getAnswers(
+        {
+          dataEntryNumber,
+          question: {
+            unit: { section: { questionnaireId: questionnaire.id } },
+          },
+        },
+        false
+      )) as AssementAnswer[];
+    },
+    placeholderData: initialAnswers,
+  });
+
+  const sortedSections = useMemo(
+    () =>
+      data?.slice().sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0)) ||
+      [],
+    [data]
+  );
 
   useEffect(() => {
-    if (currentUnit) {
-      setStartTime(new Date());
+    if (sortedSections && sortedSections.length > 0 && !currentSection) {
+      setCurrentSection(sortedSections[0]);
+      const sortedSectionUnits = sortedSections[0].units
+        .slice()
+        .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+      setCurrentUnit(sortedSectionUnits[0]);
     }
-  }, [currentUnit]);
+  }, [sortedSections, currentSection]);
 
   const questions =
-    data
+    sortedSections
       ?.find((section) => section.id === currentSection?.id)
       ?.units?.find((unit) => unit.id === currentUnit?.id)?.questions || [];
 
@@ -175,11 +191,49 @@ const Assessment = ({
       setCurrentUnit(unit);
     }
   };
-  // console.log({ currentSection, currentUnit, fields, answers });
+
+  const saveAssessment = async (values: any) => {
+    setIsSaving(true);
+    try {
+      const answers = Object.entries(values).map(
+        ([questionId, answer]) =>
+          ({
+            questionId,
+            answer,
+            dataEntryNumber,
+          } as AssementAnswer)
+      );
+
+      // console.log("Saving answers:", answers);
+      await saveAnswers(answers);
+
+      await queryClient.refetchQueries({
+        queryKey: [
+          "answers",
+          {
+            questionnaireId: questionnaire.id,
+            dataEntryNumber,
+          },
+        ],
+      });
+      goToNextUnit();
+      setIsSaving(false);
+    } catch (e) {
+      const message = handleReturnError(e);
+      toaster.create({
+        title: translate(dictionary.error),
+        description: message,
+        type: "error",
+        duration: 5000,
+        closable: true,
+      });
+      setIsSaving(false);
+    }
+  };
 
   return (
     <>
-      {(isLoading || isSaving) && <FullPageLoader />}
+      {(isLoading || isSaving || isAnswersLoading) && <FullPageLoader />}
       {!isLoading && (
         <VStack gap={2} w="full" alignItems="left">
           <Stack
@@ -195,7 +249,7 @@ const Assessment = ({
               w="350px"
               display={{ base: "none", md: "flex" }}
             >
-              {(data || []).map((section) => (
+              {(sortedSections || []).map((section) => (
                 <Box
                   key={section.id}
                   p={2}
@@ -204,11 +258,7 @@ const Assessment = ({
                   borderRadius="md"
                   bg="gray.50"
                 >
-                  <Text
-                    fontWeight="semibold"
-                    fontSize="sm"
-                    color="orange.50"
-                  >
+                  <Text fontWeight="bold" fontSize="sm" color="green.500">
                     {translate(
                       section.title as PrismaJson.PartialTranslation[]
                     )}
@@ -254,16 +304,19 @@ const Assessment = ({
                     label: translate(
                       s.title as PrismaJson.PartialTranslation[]
                     ).toUpperCase(),
-                    options: s.units.map(
-                      (u) =>
-                        ({
-                          value: u.id,
-                          sectionId: s.id,
-                          label: translate(
-                            u.title as PrismaJson.PartialTranslation[]
-                          ),
-                        } as Option)
-                    ),
+                    options: s.units
+                      .slice()
+                      .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
+                      .map(
+                        (u) =>
+                          ({
+                            value: u.id,
+                            sectionId: s.id,
+                            label: translate(
+                              u.title as PrismaJson.PartialTranslation[]
+                            ),
+                          } as Option)
+                      ),
                   };
                 })}
                 onChange={(
@@ -305,7 +358,7 @@ const Assessment = ({
               </Text>
               <DynamicForm
                 isReadOnly={readOnly}
-                onSubmit={()=>{}}
+                onSubmit={saveAssessment}
                 buttonText={buttonText}
                 fields={fields}
                 translate={translate}
@@ -318,4 +371,4 @@ const Assessment = ({
   );
 };
 
-export default Assessment
+export default Assessment;

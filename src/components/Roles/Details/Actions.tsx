@@ -13,7 +13,7 @@ const Actions = ({data}: {data:RoleDetail}) => {
   return (
     <HStack>
       <Modal
-        size="3xl"
+        size="lg"
         vh="40vh"
         title={`${translate(dictionary.editRole)} ${data.title}`}
         mainContent={<Form role={data} />}

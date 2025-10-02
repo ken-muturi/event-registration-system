@@ -31,32 +31,33 @@ import {
   IconButton,
   IconButtonProps,
   Menu,
+  Portal,
   Spacer,
   Spinner,
   Stack,
   Table,
   Text,
   VStack,
-} from '@chakra-ui/react';
-import { GrClose, GrHide, GrTree } from 'react-icons/gr';
-import { FaCaretDown, FaCaretRight } from 'react-icons/fa';
-import { IconType } from 'react-icons';
-import { HiOutlineBarsArrowDown, HiOutlineBarsArrowUp } from 'react-icons/hi2';
+} from "@chakra-ui/react";
+import { GrClose, GrHide, GrTree } from "react-icons/gr";
+import { FaCaretDown, FaCaretRight } from "react-icons/fa";
+import { IconType } from "react-icons";
+import { HiOutlineBarsArrowDown, HiOutlineBarsArrowUp } from "react-icons/hi2";
 
-import Pagination from './Pagination';
-import Filter from './Filter';
+import Pagination from "./Pagination";
+import Filter from "./Filter";
 import {
   ExportToCSV,
   ExportToPDF,
   getCommonPinningStyles,
   getFilterFunctions,
   getTableDataForExport,
-} from './utils';
-import { MdKeyboardArrowDown, MdDownload } from 'react-icons/md';
-import { FiFilter } from 'react-icons/fi';
-import { HiEyeOff } from 'react-icons/hi';
-import { dictionary } from './dictionary';
-import { useUX } from '@/context/UXContext';
+} from "./utils";
+import { MdKeyboardArrowDown, MdDownload } from "react-icons/md";
+import { FiFilter } from "react-icons/fi";
+import { HiEyeOff } from "react-icons/hi";
+import { dictionary } from "./dictionary";
+import { useUX } from "@/context/UXContext";
 
 interface HeaderButtonProps extends IconButtonProps {
   iconObj: IconType;
@@ -67,11 +68,7 @@ export type ColumnProps = {
 };
 
 const HeaderButton = ({ iconObj, ...rest }: HeaderButtonProps) => (
-  <IconButton
-    variant="ghost"
-    size="md"
-    {...rest}
-  >
+  <IconButton variant="ghost" size="md" {...rest}>
     <Icon as={iconObj} />
   </IconButton>
 );
@@ -157,7 +154,7 @@ export function TableGroupable<TData>({
   const stableVisibleColumns = useMemo(() => visibleColumns, [visibleColumns]);
   // const stablePagination = useMemo(() => pagination, [pagination]);
   const stableColumnPinning = useMemo(() => columnPinning, [columnPinning]);
- 
+
   const onExpandedChange = useCallback((d: any) => {
     if (typeof d === "function") {
       setExpanded(d);
@@ -210,8 +207,7 @@ export function TableGroupable<TData>({
     <Table.Root size="sm" stickyHeader>
       <Table.Header>
         {table.getHeaderGroups().map((headerGroup, hgindex) => (
-          // <Table.Row key={hgindex} pos={"sticky"} top={0} zIndex={2}>
-          <Table.Row key={hgindex}>
+          <Table.Row key={hgindex} bg="bg.subtle">
             {headerGroup.headers.map((header, hindex) => {
               return (
                 <Table.ColumnHeader
@@ -266,24 +262,19 @@ export function TableGroupable<TData>({
                       {(header.column.getCanFilter() ||
                         header.column.getCanGroup() ||
                         header.column.getCanHide()) && (
-                          <Menu.Root>
-                            <Menu.Trigger asChild>
-                              <IconButton
-                                size="sm"
-                                p={0}
-                                aria-label={translate(dictionary.options)}
-                                variant="ghost"
-                              >
-                                <MdKeyboardArrowDown />
-                              </IconButton>
-                            </Menu.Trigger>
+                        <Menu.Root>
+                          <Menu.Trigger asChild>
+                            <IconButton
+                              size="xs"
+                              aria-label={translate(dictionary.options)}
+                              variant="ghost"
+                            >
+                              <MdKeyboardArrowDown />
+                            </IconButton>
+                          </Menu.Trigger>
+                          <Portal>
                             <Menu.Positioner>
-                              <Menu.Content
-                                color="muted"
-                                fontWeight="500"
-                                boxShadow="lg"
-                                zIndex="popover"
-                              >
+                              <Menu.Content>
                                 {header.column.getCanFilter() && (
                                   <Menu.Item
                                     value="toggle-filter"
@@ -298,7 +289,7 @@ export function TableGroupable<TData>({
                                     }}
                                   >
                                     {header.column.getIsFiltered() &&
-                                      columnToFilter === header.column ? (
+                                    columnToFilter === header.column ? (
                                       <HiEyeOff />
                                     ) : (
                                       <FiFilter />
@@ -331,8 +322,9 @@ export function TableGroupable<TData>({
                                 )}
                               </Menu.Content>
                             </Menu.Positioner>
-                          </Menu.Root>
-                        )}
+                          </Portal>
+                        </Menu.Root>
+                      )}
                     </HStack>
                   )}
                 </Table.ColumnHeader>
@@ -353,7 +345,7 @@ export function TableGroupable<TData>({
             </Table.Cell>
           </Table.Row>
         ) : (
-            table.getRowModel().rows.map((row, rindex) => {
+          table.getRowModel().rows.map((row, rindex) => {
             return (
               <Table.Row key={rindex}>
                 {row.getVisibleCells().map((cell, cindex) => {
@@ -393,7 +385,7 @@ export function TableGroupable<TData>({
                         // renderer for cell
                         flexRender(
                           cell.column.columnDef.aggregatedCell ??
-                          cell.column.columnDef.cell,
+                            cell.column.columnDef.cell,
                           cell.getContext()
                         )
                       ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
@@ -424,10 +416,7 @@ export function TableGroupable<TData>({
         )}
         <Spacer />
         {headingContent}
-        <HStack
-          display={{ base: "none", md: "block" }}
-          gap={1}
-        >
+        <HStack display={{ base: "none", md: "block" }} gap={1}>
           {exportCsv && (
             <Button
               size="xs"

@@ -373,6 +373,7 @@ model Question {
   deleter User? @relation("questionDeleter", fields: [deletedBy], references: [id])
 
   unit Unit @relation("unitQuestion", fields: [unitId], references: [id])
+  answers Answer[] @relation("questionAnswer")
 
   @@map("questions")
 }
@@ -430,4 +431,16 @@ enum RegistrationStatus {
   PENDING
   CONFIRMED
   CANCELLED
+}
+
+model Answer {
+  id          String  @id @default(cuid()) @db.VarChar(50)
+  dataEntryNumber String    @map("data_entry_number") @db.VarChar(50)
+  questionId     String          @map("question_id") @db.VarChar(50)
+  answer         String          @db.VarChar(200)
+  createdAt      DateTime        @default(now()) @map("created_at")
+
+  question     Question     @relation("questionAnswer", fields: [questionId], references: [id])
+
+  @@map("answers")
 }

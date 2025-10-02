@@ -8,8 +8,9 @@ import {
   Input,
   Select,
   createListCollection,
+  Portal,
   type BoxProps,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
 type FormikFieldProps = {
   label?: string;
@@ -71,7 +72,7 @@ const CustomSelect: FC<FieldHookConfig<string> & FormikFieldProps> = ({
     // Create a synthetic event for backward compatibility
     if (handleChange) {
       const syntheticEvent = {
-        target: { value: selectedValue }
+        target: { value: selectedValue },
       } as React.ChangeEvent<HTMLSelectElement>;
       handleChange(syntheticEvent);
     }
@@ -90,9 +91,9 @@ const CustomSelect: FC<FieldHookConfig<string> & FormikFieldProps> = ({
     ...(hasOther ? [{ value: "other", label: "Other" }] : []),
   ];
 
-  const selectItems = selectOptions.map(option => ({
+  const selectItems = selectOptions.map((option) => ({
     label: option.label,
-    value: option.value.toString()
+    value: option.value.toString(),
   }));
 
   const collection = createListCollection({ items: selectItems });
@@ -122,17 +123,29 @@ const CustomSelect: FC<FieldHookConfig<string> & FormikFieldProps> = ({
         color="gray.400"
         borderRadius="xl"
         borderWidth="2px"
+        positioning={{ strategy: "fixed", gutter: 4 }}
       >
-        <Select.Trigger>
-          <Select.ValueText placeholder="Select an option" />
-        </Select.Trigger>
-        <Select.Content>
-          {selectItems.map((item, index) => (
-            <Select.Item key={index} item={item.value}>
-              <Select.ItemText>{item.label}</Select.ItemText>
-            </Select.Item>
-          ))}
-        </Select.Content>
+        <Select.HiddenSelect />
+        <Select.Control>
+          <Select.Trigger>
+            <Select.ValueText placeholder="Select an option" />
+          </Select.Trigger>
+          <Select.IndicatorGroup>
+            <Select.Indicator />
+          </Select.IndicatorGroup>
+        </Select.Control>
+        <Portal>
+          <Select.Positioner zIndex={9999}>
+            <Select.Content py={2} px={3} zIndex={9999} position="relative">
+              {selectItems.map((item, index) => (
+                <Select.Item key={index} item={item.value}>
+                  {item.label}
+                  <Select.ItemIndicator />
+                </Select.Item>
+              ))}
+            </Select.Content>
+          </Select.Positioner>
+        </Portal>
       </Select.Root>
       {isOtherSelected && (
         <Flex align="center" width="full" my={2} fontSize="sm">

@@ -40,39 +40,17 @@ export const adminItems: NavItem[] = [
     ],
   },
   {
-    label: "Assessments",
-    abbreviation: "assessments",
+    label: "forms",
+    abbreviation: "forms",
     type: "home",
     icon: MdOutlineShoppingBag,
     children: [
       {
-        label: "Assessment Tools",
-        abbreviation: "captools",
+        label: "Forms",
+        abbreviation: "forms",
         type: "link",
         icon: SiVitest,
         href: "/questionnaires",
-      },
-      {
-        label: "Assessment Rating",
-        abbreviation: "assessmentRating",
-        type: "link",
-        href: "/organization-ratings",
-        icon: FaChartBar,
-      },
-    ],
-  },
-  {
-    label: "Organizations",
-    abbreviation: "organizations",
-    type: "home",
-    icon: TbCategory2,
-    children: [
-      {
-        label: "Organizations",
-        abbreviation: "organizations",
-        type: "link",
-        icon: TbCategory2,
-        href: "/organizations",
       },
     ],
   },

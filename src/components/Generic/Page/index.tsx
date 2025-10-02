@@ -20,7 +20,7 @@ const Page = ({ children, title }: PageProps) => {
   const { translate } = useUX();
   return (
     <>
-      <Box bg="warchild.blue.default" minH={300}>
+      <Box bg="green.600" minH={300}>
         <Container maxW={{ base: "container.lg", xl: "container.xl" }} px={0}>
           <Navigation />
           {title && (
@@ -28,7 +28,7 @@ const Page = ({ children, title }: PageProps) => {
               fontWeight="bold"
               fontSize={{ base: "xl", md: "3xl" }}
               // bg="warchild.blue.500"
-              color="warchild.white.default"
+              color="white"
               display="inline-block"
               px={3}
               py={1}
@@ -44,7 +44,7 @@ const Page = ({ children, title }: PageProps) => {
         mt="-100px"
         // h="full"
         minH="calc(100vh - 250px)"
-        bg="warchild.white.default"
+        bg="white"
         maxW={{ base: "container.lg", xl: "container.xl" }}
         px={3}
         py={4}

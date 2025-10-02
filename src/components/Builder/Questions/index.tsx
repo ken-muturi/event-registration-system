@@ -12,9 +12,7 @@ import {
   Popover,
   createToaster,
 } from "@chakra-ui/react";
-import { FaEdit, FaPlus, FaTimes } from "react-icons/fa";
-import Modal from "@/components/Generic/Modal";
-import Form from "./Form";
+import { FaTimes } from "react-icons/fa";
 import { useUX } from "@/context/UXContext";
 import { dictionary } from "./dictionary";
 import { QuestionWithRelations } from "./type";
@@ -23,6 +21,10 @@ import QuestionDetails from "./QuestionDetails";
 import { Reorder } from "framer-motion";
 import { updateQuestionOrder } from "@/services/Questions";
 import { handleReturnError } from "@/db/error-handling";
+import AddEditQuestionModal from "./AddEditQuestionModal";
+const toaster = createToaster({
+  placement: "top-end",
+});
 
 const Details = ({
   questions: initialQuestions,
@@ -32,9 +34,6 @@ const Details = ({
   questions: QuestionWithRelations[];
 }) => {
   const { translate } = useUX();
-  const toaster = createToaster({
-    placement: "top-end",
-  });
   const questions = (initialQuestions || []).sort(
     (a, b) => a.sortOrder - b.sortOrder
   );
@@ -87,23 +86,21 @@ const Details = ({
                 fontSize="sm"
                 p={1}
                 bg="white"
-                // borderRadius="md"
-                // border="1px solid"
-                // borderColor="gray.200"
                 w="full"
                 cursor="grab"
                 _active={{ cursor: "grabbing" }}
-                _hover={{ borderColor: "orange.50" }}
+                _hover={{ borderColor: "red.50" }}
               >
                 <HStack>
                   <Icon
-                    boxSize={5}
+                    size="md"
                     fontWeight="bold"
                     verticalAlign="middle"
-                    as={GoGrabber}
                     fontSize="md"
-                    color="orange.50"
-                  />
+                    color="green.600"
+                  >
+                    <GoGrabber />
+                  </Icon>
                   <Box fontSize="sm">
                     {translate(
                       question.title as PrismaJson.PartialTranslation[]
@@ -137,41 +134,21 @@ const Details = ({
                     </Popover.Content>
                   </Popover.Root>
 
-                  <Modal
-                    title={translate(dictionary.editQuestion)}
-                    size="full"
-                    mainContent={
-                      <Form
-                        otherQuestions={questions}
-                        question={question}
-                        unitId={unitId}
-                      />
-                    }
-                  >
-                    <HStack gap="0">
-                      <Box as="span" display={{ md: "none" }} fontSize="xs">
-                        {translate(dictionary.edit)}: &nbsp;
-                      </Box>
-                      <IconButton
-                        variant="ghost"
-                        size="xs"
-                        aria-label={translate(dictionary.editQuestion)}
-                      >
-                        <FaEdit />
-                      </IconButton>
-                    </HStack>
-                  </Modal>
+                  <AddEditQuestionModal
+                    question={question}
+                    unitId={unitId}
+                    questions={questions}
+                  />
                   <HStack gap="0">
                     <Box as="span" display={{ md: "none" }} fontSize="xs">
                       {translate(dictionary.delete)}: &nbsp;
                     </Box>
-                    <IconButton
-                      variant="ghost"
+                    <Icon
                       size="xs"
                       aria-label={translate(dictionary.deleteQuestion)}
                     >
                       <FaTimes />
-                    </IconButton>
+                    </Icon>
                   </HStack>
                 </HStack>
               </Stack>
@@ -179,20 +156,7 @@ const Details = ({
           );
         })}
       </Reorder.Group>
-      <Modal
-        title={translate(dictionary.addQuestion)}
-        size="full"
-        mainContent={<Form otherQuestions={questions} unitId={unitId} />}
-      >
-        <Button
-          variant="ghost"
-          size="xs"
-          color="orange.50"
-        >
-          <FaPlus />
-          {translate(dictionary.addQuestion)}
-        </Button>
-      </Modal>
+      <AddEditQuestionModal unitId={unitId} questions={questions} />
     </VStack>
   );
 };

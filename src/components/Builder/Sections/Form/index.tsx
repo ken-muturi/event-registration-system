@@ -63,7 +63,13 @@ const initialData: SectionForm = {
 };
 
 type SectionFormTranslations = Pick<SectionForm, 'title' | 'description'>;
-const Form = ({ section }: { section?: SectionWithRelations }) => {
+const Form = ({
+  section,
+  onClose,
+}: {
+  onClose?: () => void;
+  section?: SectionWithRelations;
+}) => {
   const queryClient = useQueryClient();
   const [initialValues, setInitialValues] = useState<SectionForm>(initialData);
   const toaster = createToaster({
@@ -71,20 +77,27 @@ const Form = ({ section }: { section?: SectionWithRelations }) => {
   });
   const { translate, supportedLocales } = useUX();
 
-    const translationFields: (keyof SectionFormTranslations)[] = ['title', 'description'];
-    
-    const multilingualForm = useMultilingualForm<SectionFormTranslations>('en', supportedLocales, translationFields);
-    const {
-      currentLanguage,
-      setCurrentLanguage,
-      getActiveLanguages,
-      hasAnyContent,
-      getCurrentText,
-      addLanguage,
-      updateTranslation,
-      getAvailableLanguages,
-    } = multilingualForm;
-    
+  const translationFields: (keyof SectionFormTranslations)[] = [
+    "title",
+    "description",
+  ];
+
+  const multilingualForm = useMultilingualForm<SectionFormTranslations>(
+    "en",
+    supportedLocales,
+    translationFields
+  );
+  const {
+    currentLanguage,
+    setCurrentLanguage,
+    getActiveLanguages,
+    hasAnyContent,
+    getCurrentText,
+    addLanguage,
+    updateTranslation,
+    getAvailableLanguages,
+  } = multilingualForm;
+
   const params = useParams() as { id: string }; // Adjusted to match the expected type for useParams
   const { id: questionnaireId } = params;
   console.log({ params });
@@ -130,7 +143,8 @@ const Form = ({ section }: { section?: SectionWithRelations }) => {
       });
       await queryClient.refetchQueries({ queryKey: ["sections"] });
 
-      window.location.href = `/questionnaires/${questionnaireId}/sections`;
+      // window.location.href = `/questionnaires/${questionnaireId}/sections`;
+      onClose?.();
     } catch (e) {
       const message = handleReturnError(e);
       toaster.error({
@@ -149,120 +163,158 @@ const Form = ({ section }: { section?: SectionWithRelations }) => {
       validationSchema={schema}
     >
       {(formProps) => {
-          const { values, setFieldValue, errors, touched } = formProps;
-          console.log({ formProps });
+        const { values, setFieldValue, errors, touched } = formProps;
+        console.log({ formProps });
         return (
           <FormikForm>
             {isSaving && <FullPageLoader />}
             <VStack alignItems="left" gap={4}>
-                  {/* Language Pills */}
-                  <HStack gap="2">
-                    {getActiveLanguages(values).map(langCode => {
-                      return (
-                        <Badge
-                          key={langCode}
-                          variant={currentLanguage === langCode ? "solid" : "outline"}
-                          colorScheme={currentLanguage === langCode ? "blue" : "gray"}
-                          size="lg"
-                          px={4}
-                          py={2}
-                          borderRadius="full"
-                          cursor="pointer"
-                          onClick={() => setCurrentLanguage(langCode as SupportedLocale)}
-                          position="relative"
-                        >
-                          {langCode}
-                          {hasAnyContent(langCode, values) && (
-                            <Circle
-                              size="3"
-                              bg="green.500"
-                              position="absolute"
-                              top="-1"
-                              right="-1"
-                            >
-                              <Check size="8px" color="white" />
-                            </Circle>
-                          )}
-                        </Badge>
-                      );
-                    })}
-                    
-                    <Box>
-                      <Select.Root
-                      collection={createListCollection({
-                        items: getAvailableLanguages(values),
-                      })}
-                      size="sm"
-                      onValueChange={(details) => {
-                        if (details.value[0]) {
-                          addLanguage(details.value[0] as SupportedLocale, values, setFieldValue);
-                        }
-                      }}
+              {/* Language Pills */}
+              <HStack gap="2">
+                {getActiveLanguages(values).map((langCode) => {
+                  return (
+                    <Badge
+                      key={langCode}
+                      variant={
+                        currentLanguage === langCode ? "solid" : "outline"
+                      }
+                      colorScheme={
+                        currentLanguage === langCode ? "blue" : "gray"
+                      }
+                      size="lg"
+                      px={4}
+                      py={2}
+                      borderRadius="full"
+                      cursor="pointer"
+                      onClick={() =>
+                        setCurrentLanguage(langCode as SupportedLocale)
+                      }
+                      position="relative"
                     >
-                      <Select.Trigger
-                        borderRadius="full"
-                        borderWidth="1px"
-                        borderColor="gray.300"
-                        px="3"
-                        py="1"
-                        fontSize="sm"
-                        cursor="pointer"
-                        _hover={{ borderColor: "gray.400" }}
-                      >
-                        <Select.ValueText placeholder="+ Add Language" />
-                      </Select.Trigger>
-                      <Select.Content>
-                        {getAvailableLanguages(values).map(lang => (
-                            <Select.Item key={lang} item={lang}>
-                              <Select.ItemText>{lang}</Select.ItemText>
-                            </Select.Item>
-                          ))}
-                      </Select.Content>
-                      </Select.Root>
-                    </Box>
-                  </HStack>
+                      {langCode}
+                      {hasAnyContent(langCode, values) && (
+                        <Circle
+                          size="3"
+                          bg="green.500"
+                          position="absolute"
+                          top="-1"
+                          right="-1"
+                        >
+                          <Check size="8px" color="white" />
+                        </Circle>
+                      )}
+                    </Badge>
+                  );
+                })}
 
-                  {/* Form */}
-                    <Text color="gray.500" fontSize="sm" fontStyle="italic">Enter content in {currentLanguage}</Text>
+                <Box>
+                  <Select.Root
+                    collection={createListCollection({
+                      items: getAvailableLanguages(values),
+                    })}
+                    size="sm"
+                    onValueChange={(details) => {
+                      if (details.value[0]) {
+                        addLanguage(
+                          details.value[0] as SupportedLocale,
+                          values,
+                          setFieldValue
+                        );
+                      }
+                    }}
+                  >
+                    <Select.Trigger
+                      borderRadius="full"
+                      borderWidth="1px"
+                      borderColor="gray.300"
+                      px="3"
+                      py="1"
+                      fontSize="sm"
+                      cursor="pointer"
+                      _hover={{ borderColor: "gray.400" }}
+                    >
+                      <Select.ValueText placeholder="+ Add Language" />
+                    </Select.Trigger>
+                    <Select.Content>
+                      {getAvailableLanguages(values).map((lang) => (
+                        <Select.Item key={lang} item={lang}>
+                          <Select.ItemText>{lang}</Select.ItemText>
+                        </Select.Item>
+                      ))}
+                    </Select.Content>
+                  </Select.Root>
+                </Box>
+              </HStack>
 
-                      <Box width="full">
-                        <Text fontSize="sm" fontWeight="medium" color="gray.700" mb="2">Question Title *</Text>
-                        <Input
-                          p={2}
-                          name="title"
-                          value={getCurrentText('title', values)}
-                          onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
-                            console.log(e.target.value);
-                            updateTranslation('title', e.target.value, values, setFieldValue)
-                          }}
-                          placeholder={`Enter title in ${currentLanguage}`}
-                          borderRadius="xl"
-                          borderWidth="2px"
-                          borderColor={errors.title && touched.title ? "red.500" : "gray.200"}
-                        />
-                        {errors.title && touched.title && (
-                          <Text color="red.500" fontSize="sm" mt="1">{errors.title as string}</Text>
-                        )}
-                      </Box>
+              {/* Form */}
+              <Text color="gray.500" fontSize="sm" fontStyle="italic">
+                Enter content in {currentLanguage}
+              </Text>
 
-                      <Box width="full">
-                        <Text fontSize="sm" fontWeight="medium" color="gray.700" mb="2">Question Description *</Text>
-                        <Textarea
-                          name="description"
-                          value={getCurrentText('description', values)}
-                          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateTranslation('description', e.target.value, values, setFieldValue)}
-                          placeholder={`Enter description in ${currentLanguage}`}
-                          rows={5}
-                          p={2}
-                          borderRadius="xl"
-                          borderWidth="2px"
-                          borderColor={errors.description && touched.description ? "red.500" : "gray.200"}
-                          resize="none"
-                        />
-                        {errors.description && touched.description && (
-                          <Text color="red.500" fontSize="sm" mt="1">{errors.description as string}</Text>
-                        )}
-                      </Box>
+              <Box width="full">
+                <Text fontSize="sm" fontWeight="medium" color="gray.700" mb="2">
+                  Question Title *
+                </Text>
+                <Input
+                  p={2}
+                  name="title"
+                  value={getCurrentText("title", values)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    console.log(e.target.value);
+                    updateTranslation(
+                      "title",
+                      e.target.value,
+                      values,
+                      setFieldValue
+                    );
+                  }}
+                  placeholder={`Enter title in ${currentLanguage}`}
+                  borderRadius="xl"
+                  borderWidth="2px"
+                  borderColor={
+                    errors.title && touched.title ? "red.500" : "gray.200"
+                  }
+                />
+                {errors.title && touched.title && (
+                  <Text color="red.500" fontSize="sm" mt="1">
+                    {errors.title as string}
+                  </Text>
+                )}
+              </Box>
+
+              <Box width="full">
+                <Text fontSize="sm" fontWeight="medium" color="gray.700" mb="2">
+                  Question Description *
+                </Text>
+                <Textarea
+                  name="description"
+                  value={getCurrentText("description", values)}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                    updateTranslation(
+                      "description",
+                      e.target.value,
+                      values,
+                      setFieldValue
+                    )
+                  }
+                  placeholder={`Enter description in ${currentLanguage}`}
+                  rows={5}
+                  p={2}
+                  borderRadius="xl"
+                  borderWidth="2px"
+                  borderColor={
+                    errors.description && touched.description
+                      ? "red.500"
+                      : "gray.200"
+                  }
+                  resize="none"
+                />
+                {errors.description && touched.description && (
+                  <Text color="red.500" fontSize="sm" mt="1">
+                    {errors.description as string}
+                  </Text>
+                )}
+              </Box>
 
               <HStack>
                 <Button type="submit" colorScheme="orange">

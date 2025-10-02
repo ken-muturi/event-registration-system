@@ -6,11 +6,6 @@ export type SectionWithRelations = Prisma.SectionGetPayload<{
 
 export type AssementAnswer = {
   answer: string;
-  organizationId: string;
-  type: AnswerScoreType;
-  // sectionId: string
-  // unitId: string
+  dataEntryNumber: string;
   questionId: string;
-  createdBy: string;
-  type: string;
 };

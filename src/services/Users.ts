@@ -21,11 +21,6 @@ export async function getUsers(
               title: true,
             },
           },
-          organization: {
-            select: {
-              title: true,
-            },
-          },
         }
       : {};
     return await prisma.user.findMany({
@@ -75,7 +70,7 @@ export async function getLoginUser(email: string, hasChildren = false) {
             },
           },
         }
-      : { role: true, organization: true };
+      : { role: true };
     return prisma.user.findUnique({
       where: { email: email.toLowerCase() },
       include,

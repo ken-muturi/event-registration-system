@@ -261,115 +261,153 @@ const Form = ({
         return (
           <FormikForm>
             {isSaving && <FullPageLoader />}
-            <VStack alignItems="left" gap={4}>
-  {/* Language Pills */}
-                  <HStack gap="2">
-                    {getActiveLanguages(values).map(langCode => {
-                      return (
-                        <Badge
-                          key={langCode}
-                          variant={currentLanguage === langCode ? "solid" : "outline"}
-                          colorScheme={currentLanguage === langCode ? "blue" : "gray"}
-                          size="lg"
-                          px={4}
-                          py={2}
-                          borderRadius="full"
-                          cursor="pointer"
-                          onClick={() => setCurrentLanguage(langCode as SupportedLocale)}
-                          position="relative"
-                        >
-                          {langCode}
-                          {hasAnyContent(langCode, values) && (
-                            <Circle
-                              size="3"
-                              bg="green.500"
-                              position="absolute"
-                              top="-1"
-                              right="-1"
-                            >
-                              <Check size="8px" color="white" />
-                            </Circle>
-                          )}
-                        </Badge>
-                      );
-                    })}
-                    
-                    <Box>
-                      <Select.Root
-                      collection={createListCollection({
-                        items: getAvailableLanguages(values),
-                      })}
-                      size="sm"
-                      onValueChange={(details) => {
-                        if (details.value[0]) {
-                          addLanguage(details.value[0] as SupportedLocale, values, setFieldValue);
-                        }
-                      }}
+            <VStack alignItems="left" p={4} gap={4}>
+              {/* Language Pills */}
+              <HStack gap="2">
+                {getActiveLanguages(values).map((langCode) => {
+                  return (
+                    <Badge
+                      key={langCode}
+                      variant={
+                        currentLanguage === langCode ? "solid" : "outline"
+                      }
+                      colorScheme={
+                        currentLanguage === langCode ? "blue" : "gray"
+                      }
+                      size="lg"
+                      px={4}
+                      py={2}
+                      borderRadius="full"
+                      cursor="pointer"
+                      onClick={() =>
+                        setCurrentLanguage(langCode as SupportedLocale)
+                      }
+                      position="relative"
                     >
-                      <Select.Trigger
-                        borderRadius="full"
-                        borderWidth="1px"
-                        borderColor="gray.300"
-                        px="3"
-                        py="1"
-                        fontSize="sm"
-                        cursor="pointer"
-                        _hover={{ borderColor: "gray.400" }}
-                      >
-                        <Select.ValueText placeholder="+ Add Language" />
-                      </Select.Trigger>
-                      <Select.Content>
-                        {getAvailableLanguages(values).map(lang => (
-                            <Select.Item key={lang} item={lang}>
-                              <Select.ItemText>{lang}</Select.ItemText>
-                            </Select.Item>
-                          ))}
-                      </Select.Content>
-                      </Select.Root>
-                    </Box>
-                  </HStack>
+                      {langCode}
+                      {hasAnyContent(langCode, values) && (
+                        <Circle
+                          size="3"
+                          bg="green.500"
+                          position="absolute"
+                          top="-1"
+                          right="-1"
+                        >
+                          <Check size="8px" color="white" />
+                        </Circle>
+                      )}
+                    </Badge>
+                  );
+                })}
 
-                  {/* Form */}
-                    <Text color="gray.500" fontSize="sm" fontStyle="italic">Enter content in {currentLanguage}</Text>
+                <Box>
+                  <Select.Root
+                    collection={createListCollection({
+                      items: getAvailableLanguages(values),
+                    })}
+                    size="sm"
+                    onValueChange={(details) => {
+                      if (details.value[0]) {
+                        addLanguage(
+                          details.value[0] as SupportedLocale,
+                          values,
+                          setFieldValue
+                        );
+                      }
+                    }}
+                  >
+                    <Select.Trigger
+                      borderRadius="full"
+                      borderWidth="1px"
+                      borderColor="gray.300"
+                      px="3"
+                      py="1"
+                      fontSize="sm"
+                      cursor="pointer"
+                      _hover={{ borderColor: "gray.400" }}
+                    >
+                      <Select.ValueText placeholder="+ Add Language" />
+                    </Select.Trigger>
+                    <Select.Content>
+                      {getAvailableLanguages(values).map((lang) => (
+                        <Select.Item key={lang} item={lang}>
+                          <Select.ItemText>{lang}</Select.ItemText>
+                        </Select.Item>
+                      ))}
+                    </Select.Content>
+                  </Select.Root>
+                </Box>
+              </HStack>
 
-                      <Box width="full">
-                        <Text fontSize="sm" fontWeight="medium" color="gray.700" mb="2">Question Title *</Text>
-                        <Input
-                        p={2}
-                          name="title"
-                          value={getCurrentText('title', values)}
-                          onChange={(e:React.ChangeEvent<HTMLInputElement>) => {
-                            console.log(e.target.value);
-                            updateTranslation('title', e.target.value, values, setFieldValue)
-                          }}
-                          placeholder={`Enter title in ${currentLanguage}`}
-                          borderRadius="xl"
-                          borderWidth="2px"
-                          borderColor={errors.title && touched.title ? "red.500" : "gray.200"}
-                        />
-                        {errors.title && touched.title && (
-                          <Text color="red.500" fontSize="sm" mt="1">{errors.title as string}</Text>
-                        )}
-                      </Box>
+              {/* Form */}
+              <Text color="gray.500" fontSize="sm" fontStyle="italic">
+                Enter content in {currentLanguage}
+              </Text>
 
-                      <Box width="full">
-                        <Text fontSize="sm" fontWeight="medium" color="gray.700" mb="2">Question Description *</Text>
-                        <Textarea
-                          name="description"
-                          value={getCurrentText('description', values)}
-                          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => updateTranslation('description', e.target.value, values, setFieldValue)}
-                          placeholder={`Enter description in ${currentLanguage}`}
-                          rows={5}
-                          p={2}
-                          borderRadius="xl"
-                          borderWidth="2px"
-                          borderColor={errors.description && touched.description ? "red.500" : "gray.200"}
-                          resize="none"
-                        />
-                        {errors.description && touched.description && (
-                          <Text color="red.500" fontSize="sm" mt="1">{errors.description as string}</Text>
-                        )}
-                      </Box>
+              <Box width="full">
+                <Text fontSize="sm" fontWeight="medium" color="gray.700" mb="2">
+                  Question Title *
+                </Text>
+                <Input
+                  p={2}
+                  name="title"
+                  value={getCurrentText("title", values)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    console.log(e.target.value);
+                    updateTranslation(
+                      "title",
+                      e.target.value,
+                      values,
+                      setFieldValue
+                    );
+                  }}
+                  placeholder={`Enter title in ${currentLanguage}`}
+                  borderRadius="xl"
+                  borderWidth="2px"
+                  borderColor={
+                    errors.title && touched.title ? "red.500" : "gray.200"
+                  }
+                />
+                {errors.title && touched.title && (
+                  <Text color="red.500" fontSize="sm" mt="1">
+                    {errors.title as string}
+                  </Text>
+                )}
+              </Box>
+
+              <Box width="full">
+                <Text fontSize="sm" fontWeight="medium" color="gray.700" mb="2">
+                  Question Description *
+                </Text>
+                <Textarea
+                  name="description"
+                  value={getCurrentText("description", values)}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                    updateTranslation(
+                      "description",
+                      e.target.value,
+                      values,
+                      setFieldValue
+                    )
+                  }
+                  placeholder={`Enter description in ${currentLanguage}`}
+                  rows={5}
+                  p={2}
+                  borderRadius="xl"
+                  borderWidth="2px"
+                  borderColor={
+                    errors.description && touched.description
+                      ? "red.500"
+                      : "gray.200"
+                  }
+                  resize="none"
+                />
+                {errors.description && touched.description && (
+                  <Text color="red.500" fontSize="sm" mt="1">
+                    {errors.description as string}
+                  </Text>
+                )}
+              </Box>
               <CustomInput
                 name="note"
                 type="text"
@@ -416,10 +454,14 @@ const Form = ({
                           gap={3}
                         >
                           {/* Instructions */}
-                          <Text color="gray.500" fontSize="sm" fontStyle="italic">
+                          <Text
+                            color="gray.500"
+                            fontSize="sm"
+                            fontStyle="italic"
+                          >
                             Enter option labels in {currentLanguage}
                           </Text>
-                          
+
                           {formProps.values.options?.map((option, idx) => (
                             <Box
                               key={idx}
@@ -430,7 +472,11 @@ const Form = ({
                               borderColor="gray.200"
                             >
                               <HStack justify="space-between" mb={2}>
-                                <Text fontSize="sm" fontWeight="semibold" color="gray.700">
+                                <Text
+                                  fontSize="sm"
+                                  fontWeight="semibold"
+                                  color="gray.700"
+                                >
                                   Option {idx + 1}
                                 </Text>
                                 <IconButton
@@ -443,69 +489,112 @@ const Form = ({
                                   <FaTimes />
                                 </IconButton>
                               </HStack>
-                              
-                              <Stack gap={3}>
+
+                              <Stack gap={3} direction="row">
                                 <Box>
-                                  <Text fontSize="sm" fontWeight="medium" color="gray.700" mb="2">
+                                  <Text
+                                    fontSize="sm"
+                                    fontWeight="medium"
+                                    color="gray.700"
+                                    mb="2"
+                                  >
                                     Option Label in {currentLanguage} *
                                   </Text>
                                   <Input
                                     value={(() => {
-                                      const option = formProps.values.options?.[idx];
-                                      if (!option?.label) return '';
-                                      const translation = option.label.find(t => t.language === currentLanguage);
-                                      return translation?.text || '';
+                                      const option =
+                                        formProps.values.options?.[idx];
+                                      if (!option?.label) return "";
+                                      const translation = option.label.find(
+                                        (t) => t.language === currentLanguage
+                                      );
+                                      return translation?.text || "";
                                     })()}
                                     onChange={(e) => {
-                                      const currentOption = option || { label: [], value: "" };
-                                      const currentLabels = currentOption.label || [];
-                                      const existingIndex = currentLabels.findIndex(t => t.language === currentLanguage);
-                                      
+                                      const currentOption = option || {
+                                        label: [],
+                                        value: "",
+                                      };
+                                      const currentLabels =
+                                        currentOption.label || [];
+                                      const existingIndex =
+                                        currentLabels.findIndex(
+                                          (t) => t.language === currentLanguage
+                                        );
+
                                       let updatedLabels: TranslationText[];
                                       if (existingIndex >= 0) {
                                         updatedLabels = [...currentLabels];
-                                        updatedLabels[existingIndex] = { language: currentLanguage, text: e.target.value };
+                                        updatedLabels[existingIndex] = {
+                                          language: currentLanguage,
+                                          text: e.target.value,
+                                        };
                                       } else {
-                                        updatedLabels = [...currentLabels, { language: currentLanguage, text: e.target.value }];
+                                        updatedLabels = [
+                                          ...currentLabels,
+                                          {
+                                            language: currentLanguage,
+                                            text: e.target.value,
+                                          },
+                                        ];
                                       }
-                                      
-                                      setFieldValue(`options[${idx}].label`, updatedLabels);
+
+                                      setFieldValue(
+                                        `options[${idx}].label`,
+                                        updatedLabels
+                                      );
                                     }}
-                                    placeholder={`Enter option label in ${currentLanguage}`}
-                                    borderRadius="md"
-                                    borderWidth="1px"
-                                    borderColor="gray.300"
+                                    placeholder={`${translate(
+                                      dictionary.label
+                                    )} in ${currentLanguage}`}
+                                    px={2}
+                                    borderRadius="xl"
+                                    borderWidth="2px"
                                     size="sm"
                                   />
                                 </Box>
-                                
+
                                 <Box>
-                                  <Text fontSize="sm" fontWeight="medium" color="gray.700" mb="2">
+                                  <Text
+                                    fontSize="sm"
+                                    fontWeight="medium"
+                                    color="gray.700"
+                                    mb="2"
+                                  >
                                     Option Value *
                                   </Text>
                                   <Input
-                                    value={option.value || ''}
-                                    onChange={(e) => setFieldValue(`options[${idx}].value`, e.target.value)}
-                                    placeholder="Enter unique value for this option"
-                                    borderRadius="md"
-                                    borderWidth="1px"
-                                    borderColor="gray.300"
+                                    value={option.value || ""}
+                                    onChange={(e) =>
+                                      setFieldValue(
+                                        `options[${idx}].value`,
+                                        e.target.value
+                                      )
+                                    }
+                                    placeholder={translate(dictionary.value)}
+                                    px={2}
                                     size="sm"
+                                    borderRadius="xl"
+                                    borderWidth="2px"
                                   />
                                 </Box>
                               </Stack>
                             </Box>
                           ))}
-                          
+
                           <Box>
                             <Button
                               size="sm"
                               variant="outline"
                               borderColor="gray.300"
-                              onClick={() => push({ 
-                                label: [{ language: currentLanguage, text: '' }], 
-                                value: '' 
-                              })}
+                              onClick={() =>
+                                push({
+                                  label: [
+                                    { language: currentLanguage, text: "" },
+                                  ],
+                                  value: "",
+                                })
+                              }
                             >
                               <FaPlusCircle />
                               {translate(dictionary.addOption)}
@@ -517,7 +606,7 @@ const Form = ({
                   </FieldArray>
                 </>
               )}
-              {otherQuestions && otherQuestions.length && (
+              {!!(otherQuestions && otherQuestions.length) && (
                 <>
                   <Box>{translate(dictionary.condition)}</Box>
                   <FieldArray name="conditions">
@@ -596,8 +685,8 @@ const Form = ({
                 </>
               )}
               <HStack>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   bg="orange.500"
                   color="white"
                   _hover={{ bg: "orange.600" }}
