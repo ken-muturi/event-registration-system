@@ -11,12 +11,10 @@ const Actions = ({data, roles}:{data:UserDetail, roles: Role[]}) => {
   return (
     <HStack>
       <Modal
-        size="4xl"
+        size="lg"
         vh="90vh"
         title={`Edit User: ${data.firstname} ${data.othernames}`}
-        mainContent={
-          <Form roles={roles} user={data} />
-        }
+        mainContent={<Form roles={roles} user={data} />}
       >
         <IconButton
           variant="ghost"
