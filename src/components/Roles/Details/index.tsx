@@ -45,7 +45,7 @@ const Details = () => {
           headingContent={
             <>
               <Modal
-                size="3xl"
+                size="lg"
                 vh="40vh"
                 title="Add User Access"
                 mainContent={<Form />}
