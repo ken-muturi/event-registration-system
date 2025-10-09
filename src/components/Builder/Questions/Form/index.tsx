@@ -261,7 +261,7 @@ const Form = ({
         return (
           <FormikForm>
             {isSaving && <FullPageLoader />}
-            <VStack alignItems="left" p={4} gap={4}>
+            <VStack alignItems="left" gap={4}>
               {/* Language Pills */}
               <HStack gap="2">
                 {getActiveLanguages(values).map((langCode) => {
