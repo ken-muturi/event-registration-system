@@ -36,7 +36,7 @@ const Actions = ({ data }: { data: QuestionnaireDetail }) => {
         asChild
       >
         <Link href={`/questionnaires/${data.id}/sections`}>
-          {translate(dictionary.edit)}
+          {translate(dictionary.editQuestions)}
         </Link>
       </Box>
       <Box
@@ -60,19 +60,7 @@ const Actions = ({ data }: { data: QuestionnaireDetail }) => {
         )}`}
         mainContent={<Form questionnaire={data} />}
       >
-        <IconButton
-          cursor="pointer"
-          size="sm"
-          borderRadius="full"
-          color="gray.600"
-          _hover={{
-            bg: "blue.500",
-            color: "white",
-          }}
-          aria-label={translate(dictionary.editQuestionnaire)}
-        >
-          <MdModeEdit />
-        </IconButton>
+        <Box>{translate(dictionary.editQuestionnaire)}</Box>
       </Modal>
       <DeleteQuestionnaire disabled={data.hasSections} id={data.id} />
     </HStack>

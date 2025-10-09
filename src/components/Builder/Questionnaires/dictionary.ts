@@ -6,6 +6,18 @@ export const dictionary: Record<string, PartialTranslation[]> = {
     { body: { language: "es", text: "Cuestionarios" } },
     { body: { language: "ar", text: "الاستبيانات" } },
   ],
+  editQuestions: [
+    { body: { language: "en", text: "Edit Questions" } },
+    { body: { language: "fr", text: "Modifier les questions" } },
+    { body: { language: "es", text: "Editar preguntas" } },
+    { body: { language: "ar", text: "تعديل الأسئلة" } },
+  ],
+  answers: [
+    { body: { language: "en", text: "Answers" } },
+    { body: { language: "fr", text: "Réponses" } },
+    { body: { language: "es", text: "Respuestas" } },
+    { body: { language: "ar", text: "الإجابات" } },
+  ],
   forms: [
     { body: { language: "en", text: "Forms" } },
     { body: { language: "fr", text: "Formulaires" } },
