@@ -35,17 +35,17 @@ const DebouncedInput = ({
       size={size}
       data-invalid={isError}
       value={value}
-      onChange={e => {
+      onChange={(e) => {
         if (props.min && Number(props.min) > Number(e.target.value)) {
           setIsError(true);
-          console.log('here');
+          console.log("here");
         } else {
           setIsError(false);
           setValue(e.target.value);
         }
       }}
       fontSize="lg"
-      borderRadius="xl"
+      borderRadius="lg"
       borderWidth="2px"
     />
   );

@@ -1,12 +1,7 @@
-import {
-  Icon,
-  Input,
-  Group,
-  InputProps,
-} from '@chakra-ui/react';
-import React, { useEffect, useRef, useState } from 'react';
-import { GrSearch } from 'react-icons/gr';
-import { HiXCircle } from 'react-icons/hi2';
+import { Icon, Input, Group, InputProps } from "@chakra-ui/react";
+import React, { useEffect, useRef, useState } from "react";
+import { GrSearch } from "react-icons/gr";
+import { HiXCircle } from "react-icons/hi2";
 
 type DebouncedInputProps = {
   title: string;
@@ -14,13 +9,13 @@ type DebouncedInputProps = {
   onChange: (value: string | number) => void;
   debounce?: number;
   closeButton?: boolean;
-} & Omit<InputProps, 'onChange'>;
+} & Omit<InputProps, "onChange">;
 
 const DebouncedSearchInput = ({
   title,
   value: initialValue,
   onChange,
-  size = 'sm',
+  size = "sm",
   debounce = 500,
   placeholder,
   closeButton = false,
@@ -54,25 +49,25 @@ const DebouncedSearchInput = ({
 
   return (
     <Group w="full" position="relative">
-      <Icon 
-        position="absolute" 
-        left={4} 
-        zIndex={2} 
-        mr={2} 
-        as={GrSearch} 
-        size="sm" 
-        color="gray.700" 
+      <Icon
+        position="absolute"
+        left={4}
+        zIndex={2}
+        mr={2}
+        as={GrSearch}
+        size="sm"
+        color="gray.700"
       />
-      <span 
+      <span
         ref={spanRef}
         style={{
-          position: 'absolute',
+          position: "absolute",
           left: `${32}px`,
           zIndex: 2,
-          pointerEvents: 'none',
-          top: '50%',
-          transform: 'translateY(-50%)',
-          fontSize: '12px'
+          pointerEvents: "none",
+          top: "50%",
+          transform: "translateY(-50%)",
+          fontSize: "12px",
         }}
       >
         {title}
@@ -86,20 +81,21 @@ const DebouncedSearchInput = ({
         onChange={(e) => setValue(e.target.value)}
         placeholder={`Search ${title} ${placeholder}`}
         fontSize="sm"
-        borderRadius="xl"
+        borderRadius="lg"
         borderWidth="2px"
       />
       {closeButton && (
-        <Icon 
-          as={HiXCircle} 
-          size="sm" 
+        <Icon
+          size="sm"
           color="gray.700"
           position="absolute"
           right={4}
           zIndex={2}
           cursor="pointer"
           onClick={() => setValue("")}
-        />
+        >
+          <HiXCircle />
+        </Icon>
       )}
     </Group>
   );

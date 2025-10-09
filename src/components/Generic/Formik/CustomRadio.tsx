@@ -45,7 +45,7 @@ const CustomRadio: FC<FieldHookConfig<string> & IFormikFieldProps> = ({
             <Button
               size="xs"
               variant="ghost"
-              color="green.500"
+              color="red.500"
               onClick={() => setShowHelper(!showHelper)}
               ml={2}
             >
@@ -57,12 +57,12 @@ const CustomRadio: FC<FieldHookConfig<string> & IFormikFieldProps> = ({
 
       {showHelper && description && (
         <Field.HelperText
-          bg="green.100"
+          bg="orange.50"
           color="gray.900"
           p={4}
           fontSize="xs"
           borderRadius="md"
-          w="100%"
+          w="90%"
           mb={2}
           dangerouslySetInnerHTML={{ __html: description }}
         />
@@ -80,41 +80,31 @@ const CustomRadio: FC<FieldHookConfig<string> & IFormikFieldProps> = ({
       >
         {stack === "row" ? (
           <HStack gap={3}>
-            {options.map(
-              (
-                option: { value: string | number; label: string },
-                index: number
-              ) => (
-                <RadioGroup.Item
-                  key={index}
-                  value={option.value.toString().toLowerCase()}
-                >
-                  <RadioGroup.ItemControl />
-                  <RadioGroup.ItemText>{option.label}</RadioGroup.ItemText>
-                </RadioGroup.Item>
-              )
-            )}
+            {options.map((option: { value: string | number; label: string }, index: number) => (
+              <RadioGroup.Item
+                key={index}
+                value={option.value.toString().toLowerCase()}
+              >
+                <RadioGroup.ItemControl />
+                <RadioGroup.ItemText>{option.label}</RadioGroup.ItemText>
+              </RadioGroup.Item>
+            ))}
           </HStack>
         ) : (
           <VStack align="start" gap={2}>
-            {options.map(
-              (
-                option: { value: string | number; label: string },
-                index: number
-              ) => (
-                <RadioGroup.Item
-                  key={index}
-                  value={option.value.toString().toLowerCase()}
-                >
-                  <RadioGroup.ItemControl />
-                  <RadioGroup.ItemText>{option.label}</RadioGroup.ItemText>
-                </RadioGroup.Item>
-              )
-            )}
+            {options.map((option: { value: string | number; label: string }, index: number) => (
+              <RadioGroup.Item
+                key={index}
+                value={option.value.toString().toLowerCase()}
+              >
+                <RadioGroup.ItemControl />
+                <RadioGroup.ItemText>{option.label}</RadioGroup.ItemText>
+              </RadioGroup.Item>
+            ))}
           </VStack>
         )}
       </RadioGroup.Root>
-
+      
       {meta.error && meta.touched && (
         <Field.ErrorText id={`${label}-${field.name}-message`}>
           {meta.error}

@@ -9,6 +9,8 @@ import {
 } from '@chakra-ui/react';
 import { FaFileImage, FaTimesCircle } from 'react-icons/fa';
 import type { CenterProps } from '@chakra-ui/react';
+import { dictionary } from './dictionary';
+import { useUX } from '@/context/UXContext';
 
 type FilePreviewProps = {
   file: File;
@@ -17,6 +19,7 @@ type FilePreviewProps = {
 } & CenterProps;
 
 const FilePreview = ({ file, isInline, onRemove, ...props }: FilePreviewProps) => {
+  const { translate } = useUX();
   return (
     <Center
       borderWidth="1px"
@@ -50,7 +53,7 @@ const FilePreview = ({ file, isInline, onRemove, ...props }: FilePreviewProps) =
         variant="ghost"
         size="sm"
         onClick={onRemove}
-        aria-label="Remove file"
+        aria-label={translate(dictionary.removeFile)}
         pos="absolute"
         top={8}
         right={1}

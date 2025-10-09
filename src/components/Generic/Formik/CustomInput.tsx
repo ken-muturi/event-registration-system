@@ -52,7 +52,6 @@ const CustomInput: FC<FieldHookConfig<string> & FormikFieldProps> = ({
         {...(handleBlur ? { onBlurCapture: handleBlur } : {})}
         placeholder={placeholder}
         {...field}
-        px={2}
         borderRadius="xl"
         borderWidth="2px"
       />

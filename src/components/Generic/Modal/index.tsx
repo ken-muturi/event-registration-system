@@ -1,4 +1,4 @@
-import { CloseButton, Dialog, Portal } from "@chakra-ui/react";
+import { CloseButton, Dialog } from "@chakra-ui/react";
 import { ReactNode, cloneElement, isValidElement } from "react";
 
 interface IModalProps {
@@ -14,39 +14,46 @@ interface IModalProps {
 const CustomModal = (props: IModalProps) => {
   const {
     children,
-    title,
+    title = "",
     mainContent,
-    open,
-    onOpenChange,
     size = "lg",
+    open,
     vh,
+    onOpenChange,
   } = props;
+
+  // Inject onClose into mainContent if it's a React element
+  const enhancedMainContent = isValidElement(mainContent)
+    ? cloneElement(
+        mainContent as React.ReactElement<{ onClose?: () => void }>,
+        {
+          onClose: () => onOpenChange?.(false),
+        }
+      )
+    : mainContent;
+
   return (
     <Dialog.Root
       open={open}
       onOpenChange={(details) => onOpenChange?.(details.open)}
       size={size}
       scrollBehavior="inside"
-      placement="top"
-      motionPreset="slide-in-bottom"
     >
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>
-      <Portal>
-        <Dialog.Backdrop />
-        <Dialog.Positioner>
-          <Dialog.Content {...(vh ? { h: vh } : {})} p={4}>
-            <Dialog.CloseTrigger asChild>
-              <CloseButton size="sm" />
-            </Dialog.CloseTrigger>
-            {title && (
-              <Dialog.Header>
-                <Dialog.Title>{title}</Dialog.Title>
-              </Dialog.Header>
-            )}
-            <Dialog.Body>{mainContent}</Dialog.Body>
-          </Dialog.Content>
-        </Dialog.Positioner>
-      </Portal>
+      <Dialog.Backdrop />
+      <Dialog.Positioner>
+        <Dialog.Content {...(vh ? { h: vh } : {})}>
+          <Dialog.CloseTrigger asChild>
+            <CloseButton size="sm" />
+          </Dialog.CloseTrigger>
+          {/* {title && ( */}
+          <Dialog.Header>
+            <Dialog.Title>{title}</Dialog.Title>
+          </Dialog.Header>
+          {/* )} */}
+          <Dialog.Body>{enhancedMainContent}</Dialog.Body>
+        </Dialog.Content>
+      </Dialog.Positioner>
     </Dialog.Root>
   );
 };

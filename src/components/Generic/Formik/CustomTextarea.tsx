@@ -10,11 +10,13 @@ import {
 type FormikFieldProps = {
   label?: string;
   required?: boolean;
+  handleBlur?: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
 } & BoxProps;
 
 const CustomTextarea: FC<FieldHookConfig<string> & FormikFieldProps> = ({
   label,
   required = false,
+  handleBlur,
   ...props
 }) => {
   const [field, meta] = useField(props);
@@ -31,10 +33,13 @@ const CustomTextarea: FC<FieldHookConfig<string> & FormikFieldProps> = ({
           {label}
         </Field.Label>
       )}
-      <Textarea 
+      <Textarea
         size="lg"
         borderRadius="xl"
-        borderWidth="2px" {...field} />
+        borderWidth="2px"
+        {...field}
+        {...(handleBlur ? { onBlurCapture: handleBlur } : {})}
+      />
       {meta.error && meta.touched && (
         <Field.ErrorText id={`${label}-${field.name}-message`}>
           {meta.error}

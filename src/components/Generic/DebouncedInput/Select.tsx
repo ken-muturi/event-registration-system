@@ -11,6 +11,8 @@ import {
 import React, { useEffect, useState, useMemo } from "react";
 import { GrSearch } from "react-icons/gr";
 import { HiXCircle } from "react-icons/hi2";
+import { dictionary } from "./dictionary";
+import { useUX } from "@/context/UXContext";
 
 type Option = { value: string; label: string };
 
@@ -38,7 +40,7 @@ const DebouncedSelect = ({
   const [values, setValues] = useState<string[]>(
     initialValues ? initialValues.map((v) => v.value) : []
   );
-
+  const { translate } = useUX();
   const collection = useMemo(
     () =>
       createListCollection({
@@ -126,7 +128,9 @@ const DebouncedSelect = ({
             </IconButton>
           </Tooltip.Trigger>
           <Tooltip.Positioner>
-            <Tooltip.Content>Click to clear</Tooltip.Content>
+            <Tooltip.Content>
+              {translate(dictionary.clickToClear)}
+            </Tooltip.Content>
           </Tooltip.Positioner>
         </Tooltip.Root>
       </Box>

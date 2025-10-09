@@ -11,6 +11,8 @@ import {
   Portal,
   type BoxProps,
 } from "@chakra-ui/react";
+import { useUX } from "@/context/UXContext";
+import { dictionary } from "./dictionary";
 
 type FormikFieldProps = {
   label?: string;
@@ -34,6 +36,7 @@ const CustomSelect: FC<FieldHookConfig<string> & FormikFieldProps> = ({
   options,
   ...props
 }) => {
+  const { translate } = useUX();
   const [field, meta, helpers] = useField(props);
   const [otherValue, setOtherValue] = useState("");
   const [isOtherSelected, setIsOtherSelected] = useState(false);
@@ -119,16 +122,15 @@ const CustomSelect: FC<FieldHookConfig<string> & FormikFieldProps> = ({
         onValueChange={handleSelectChange}
         disabled={isDisabled || isReadOnly}
         size={size}
-        px={2}
         color="gray.400"
-        borderRadius="xl"
-        borderWidth="2px"
         positioning={{ strategy: "fixed", gutter: 4 }}
       >
         <Select.HiddenSelect />
-        <Select.Control>
-          <Select.Trigger>
-            <Select.ValueText placeholder="Select an option" />
+        <Select.Control borderRadius="xl" borderWidth="2px">
+          <Select.Trigger border="none">
+            <Select.ValueText
+              placeholder={translate(dictionary.selectOption)}
+            />
           </Select.Trigger>
           <Select.IndicatorGroup>
             <Select.Indicator />
@@ -136,7 +138,13 @@ const CustomSelect: FC<FieldHookConfig<string> & FormikFieldProps> = ({
         </Select.Control>
         <Portal>
           <Select.Positioner zIndex={9999}>
-            <Select.Content py={2} px={3} zIndex={9999} position="relative">
+            <Select.Content
+              py={2}
+              px={3}
+              w="full"
+              zIndex={9999}
+              position="relative"
+            >
               {selectItems.map((item, index) => (
                 <Select.Item key={index} item={item.value}>
                   {item.label}
@@ -149,7 +157,7 @@ const CustomSelect: FC<FieldHookConfig<string> & FormikFieldProps> = ({
       </Select.Root>
       {isOtherSelected && (
         <Flex align="center" width="full" my={2} fontSize="sm">
-          <Text>Specify Other</Text>
+          <Text>{translate(dictionary.other)}</Text>
           <Input
             ml={2}
             size="sm"

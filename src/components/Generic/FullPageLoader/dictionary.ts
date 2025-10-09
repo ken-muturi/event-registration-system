@@ -1,4 +1,4 @@
-import { PartialTranslation } from "@/types";
+import { type PartialTranslation } from "@/types";
 
 export const dictionary: Record<string, PartialTranslation[]> = {
   pleaseWait: [

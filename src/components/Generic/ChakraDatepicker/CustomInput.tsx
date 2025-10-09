@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { Input, Group, Icon } from "@chakra-ui/react";
+import { Input, Group, Icon, InputGroup } from "@chakra-ui/react";
 import { LuCalendar } from "react-icons/lu";
 
 interface CustomInputProps {
@@ -8,16 +8,20 @@ interface CustomInputProps {
   [key: string]: any;
 }
 
-const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>((props, ref) => {
+const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
+  (props, ref) => {
     return (
-        <Group w="full" borderRadius="lg">
-            <Icon color="gray.500">
-                <LuCalendar />
-            </Icon>
-            <Input {...props} ref={ref} size="sm" borderRadius="lg" />
-        </Group>
+      <InputGroup
+        w="full"
+        startElement={<LuCalendar />}
+        borderWidth="2px"
+        borderRadius="xl"
+      >
+        <Input {...props} ref={ref} size="sm" border="none" />
+      </InputGroup>
     );
-});
+  }
+);
 
 CustomInput.displayName = "CustomInput";
 

@@ -25,47 +25,50 @@ const ChakraInputPassword: FC<FieldHookConfig<string> & IFormikFieldProps> = ({
   disabled = false,
   required = false,
   hideText = false,
+  size = "sm",
   ...props
 }) => {
   const [passwordField, setPasswordField] = useState<boolean>(true);
-  const [field, meta] = useField({ ...props, value: props.value ?? '' });
-  
+  const [field, meta] = useField({ ...props, value: props.value ?? "" });
+
   return (
     <Field.Root required={required} invalid={meta.touched && !!meta.error}>
       {label && (
         <Field.Label
           htmlFor={`${field.name}`}
-          id={`${label}-${field.name.replace(/[^a-z0-9]/gi, '')}-label`}
+          id={`${label}-${field.name.replace(/[^a-z0-9]/gi, "")}-label`}
         >
           {label}
         </Field.Label>
       )}
-      <InputGroup width="full" endElement={
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setPasswordField(!passwordField)}
-          color={passwordField ? 'gray.400' : 'gray.600'}
-        >
-          {passwordField ? <FaEye /> : <FaEyeSlash />}
-        </Button>
-      }>
+      <InputGroup
+        width="full"
+        endElement={
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setPasswordField(!passwordField)}
+            color={passwordField ? "gray.400" : "gray.600"}
+          >
+            {passwordField ? <FaEye /> : <FaEyeSlash />}
+          </Button>
+        }
+      >
         <Input
           disabled={disabled}
-          type={passwordField ? 'password' : 'text'}
-          id={`${label}-${field.name.replace(/[^a-z0-9]/gi, '')}-input`}
-          size="lg"
-                px={2}
-        borderRadius="xl"
-        borderWidth="2px"
+          type={passwordField ? "password" : "text"}
+          id={`${label}-${field.name.replace(/[^a-z0-9]/gi, "")}-input`}
+          size={size}
+          borderRadius="xl"
+          borderWidth="2px"
           placeholder={placeholder}
           {...field}
         />
       </InputGroup>
-      
+
       {meta.error && meta.touched && (
         <Field.ErrorText
-          id={`${label}-${field.name.replace(/[^a-z0-9]/gi, '')}-message`}
+          id={`${label}-${field.name.replace(/[^a-z0-9]/gi, "")}-message`}
         >
           {meta.error}
         </Field.ErrorText>
